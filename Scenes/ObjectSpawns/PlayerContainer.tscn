@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://cibriq5oxm3x4"]
+
+[ext_resource type="PackedScene" uid="uid://cgtqgtsy1uac" path="res://Scenes/tankPlayer.tscn" id="1_r3ex3"]
+[ext_resource type="Script" uid="uid://c8mdptnv6val6" path="res://Scripts/PlayerContainer.gd" id="1_rkxaq"]
+
+[sub_resource type="GDScript" id="GDScript_rkxaq"]
+
+[node name="PlayerContainer" type="Node" unique_id=326813480 node_paths=PackedStringArray("spawner", "RespawnButton")]
+script = ExtResource("1_rkxaq")
+spawner = NodePath("PlayerTankSpawner")
+tankScene = ExtResource("1_r3ex3")
+persistent = true
+RespawnButton = NodePath("RespawnButton")
+
+[node name="RespawnButton" type="Button" parent="." unique_id=877069524]
+offset_left = 1.0
+offset_top = 124.0
+offset_right = 92.0
+offset_bottom = 155.0
+text = "Respawn"
+
+[node name="PlayerTankSpawner" type="MultiplayerSpawner" parent="." unique_id=1462895150]
+_spawnable_scenes = PackedStringArray("uid://d18aylqansqdx", "uid://dltqymjoy41dg", "uid://cgtqgtsy1uac")
+spawn_path = NodePath("..")
+script = SubResource("GDScript_rkxaq")
+
+[connection signal="child_exiting_tree" from="." to="." method="ChildDied"]
+[connection signal="pressed" from="RespawnButton" to="." method="Respawn"]

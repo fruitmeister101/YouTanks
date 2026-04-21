@@ -1,0 +1,84 @@
+[gd_scene format=3 uid="uid://d18aylqansqdx"]
+
+[ext_resource type="Script" uid="uid://c057ot2xslgac" path="res://Scripts/Bullet.gd" id="1_hct83"]
+[ext_resource type="Material" uid="uid://8ynalyhfyhbm" path="res://Materials/LineMaterial.tres" id="2_ulcdk"]
+[ext_resource type="Script" uid="uid://bmvqnow50f2q8" path="res://addons/LineRenderer/line_renderer.gd" id="3_ulcdk"]
+[ext_resource type="Script" uid="uid://djbx44ypv1gbg" path="res://Scripts/Trail.gd" id="4_gcbys"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oduel"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ycag2"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_gcbys"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gcbys"]
+margin = 0.45
+radius = 0.125
+height = 0.5
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3ld5y"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[node name="Bullet" type="CharacterBody3D" unique_id=40436193 node_paths=PackedStringArray("trail", "cast", "sync")]
+collision_layer = 2
+axis_lock_linear_y = true
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+script = ExtResource("1_hct83")
+trail = NodePath("LineRenderer3D")
+trailLen = 60
+cast = NodePath("ShapeCast")
+sync = NodePath("MultiplayerSynchronizer")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1691960709]
+transform = Transform3D(0.25, 0, 0, 0, -1.0927847e-08, -0.25, 0, 0.25, -1.0927847e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_oduel")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1261877591]
+transform = Transform3D(0.25, 0, 0, 0, -1.0927847e-08, -0.25, 0, 0.25, -1.0927847e-08, 0, 0, 0)
+layers = 2
+mesh = SubResource("CapsuleMesh_ycag2")
+
+[node name="VisibleOnScreenEnabler3D" type="VisibleOnScreenEnabler3D" parent="." unique_id=1476215299]
+aabb = AABB(-0.1577665, -0.1863756, -0.2621614, 0.315533, 0.3727512, 0.5243228)
+
+[node name="LineRenderer3D" type="MeshInstance3D" parent="." unique_id=961576495]
+physics_interpolation_mode = 2
+material_override = ExtResource("2_ulcdk")
+mesh = SubResource("ImmediateMesh_gcbys")
+script = ExtResource("3_ulcdk")
+points = Array[Vector3]([])
+start_thickness = 0.05
+end_thickness = 0.0
+metadata/_custom_type_script = "uid://bmvqnow50f2q8"
+
+[node name="Logic" type="Node3D" parent="LineRenderer3D" unique_id=2052956112 node_paths=PackedStringArray("line")]
+script = ExtResource("4_gcbys")
+line = NodePath("..")
+
+[node name="ShapeCast" type="ShapeCast3D" parent="." unique_id=1061290007]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_gcbys")
+target_position = Vector3(0, 0.2, 0)
+max_results = 1
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=883021614]
+replication_config = SubResource("SceneReplicationConfig_3ld5y")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1041846675]
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Area3D" unique_id=2014795731]
+transform = Transform3D(0.25, 0, 0, 0, -1.0927847e-08, -0.25, 0, 0.25, -1.0927847e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_oduel")
+
+[connection signal="screen_exited" from="VisibleOnScreenEnabler3D" to="." method="Destroy"]
+[connection signal="area_entered" from="Area3D" to="." method="HitArea"]

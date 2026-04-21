@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://bs6npnqxm08ns"]
+
+[ext_resource type="Script" uid="uid://b5lj850g48g7" path="res://Scripts/TankContainer.gd" id="1_x0id6"]
+[ext_resource type="PackedScene" uid="uid://cj34qwbg24gp8" path="res://Scenes/Tanks/MoverTank.tscn" id="2_x0id6"]
+
+[sub_resource type="GDScript" id="GDScript_rkxaq"]
+
+[node name="TankContainer" type="Node" unique_id=326813480 node_paths=PackedStringArray("spawner")]
+script = ExtResource("1_x0id6")
+spawner = NodePath("TankSpawner")
+tankScene = ExtResource("2_x0id6")
+
+[node name="TankSpawner" type="MultiplayerSpawner" parent="." unique_id=1462895150]
+_spawnable_scenes = PackedStringArray("uid://d18aylqansqdx", "uid://dltqymjoy41dg")
+spawn_path = NodePath("..")
+script = SubResource("GDScript_rkxaq")
+
+[connection signal="child_exiting_tree" from="." to="." method="ChildDied"]

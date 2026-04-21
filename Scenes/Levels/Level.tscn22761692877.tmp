@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://dmn4ii75wlpyn"]
+
+[ext_resource type="Script" uid="uid://cqcnlghm2e6ys" path="res://Scripts/Level.gd" id="1_k5f4k"]
+[ext_resource type="Material" uid="uid://ncd4wr603yq7" path="res://Materials/Floor.tres" id="2_81xng"]
+[ext_resource type="PackedScene" uid="uid://bs6npnqxm08ns" path="res://Scenes/ObjectSpawns/MoverTankContainer.tscn" id="2_bk2yi"]
+[ext_resource type="PackedScene" uid="uid://goyvabnjgst8" path="res://Scenes/ObjectSpawns/BasicTankContainer.tscn" id="3_5lnup"]
+[ext_resource type="PackedScene" uid="uid://dba5ik3xoll6d" path="res://Scenes/Upgrades/Armor.tscn" id="4_l0mwj"]
+[ext_resource type="PackedScene" uid="uid://dnlk474kh1pkk" path="res://Scenes/Upgrades/Speedy.tscn" id="5_4nh8f"]
+[ext_resource type="PackedScene" uid="uid://b8dj5ybypoipt" path="res://Scenes/Upgrades/FastReload.tscn" id="6_4nh8f"]
+[ext_resource type="PackedScene" uid="uid://yr00wopr1hbn" path="res://Scenes/Upgrades/Sniper.tscn" id="8_etd3f"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tumq0"]
+albedo_color = Color(0, 0.25882354, 0.2901961, 1)
+
+[node name="Level" type="Node" unique_id=1206961934]
+script = ExtResource("1_k5f4k")
+testTanks = [ExtResource("2_bk2yi"), ExtResource("3_5lnup")]
+testUpgrades = [ExtResource("4_l0mwj"), ExtResource("5_4nh8f"), ExtResource("6_4nh8f")]
+
+[node name="DynamicObjects" type="Node3D" parent="." unique_id=1263524994]
+
+[node name="Static Floor" type="Node3D" parent="." unique_id=228594174]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Static Floor" unique_id=1459870562]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+material_override = ExtResource("2_81xng")
+use_collision = true
+size = Vector3(25, 2, 25)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Static Floor/CSGBox3D" unique_id=1827579014]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+material_override = SubResource("StandardMaterial3D_tumq0")
+operation = 2
+size = Vector3(24, 1, 24)
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=655819304]
+transform = Transform3D(0.66913056, 0.74314487, 3.2483893e-08, 0, -4.371139e-08, 1, 0.74314487, -0.66913056, -2.9248627e-08, 0, -3.4414692, -1.3919449)
+layers = 3
+light_energy = 2.575
+shadow_enabled = true
+
+[node name="SpawnEnemyButton" type="Button" parent="." unique_id=1588708197]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -124.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "Spawn Random Enemy"
+
+[node name="SpawnUpgradeButton" type="Button" parent="." unique_id=1058210834]
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -199.0
+offset_top = 31.0
+offset_bottom = 62.0
+grow_horizontal = 0
+text = "Spawn Random Upgrade
+"
+
+[node name="Sniper" parent="." unique_id=1827872960 instance=ExtResource("8_etd3f")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.50626755, 0.9999981, 2.9051595)
+
+[connection signal="pressed" from="SpawnEnemyButton" to="." method="SpawnRandomEnemy"]
+[connection signal="pressed" from="SpawnUpgradeButton" to="." method="SpawnRandomUpgrade"]

@@ -1,0 +1,125 @@
+[gd_scene format=3 uid="uid://d18aylqansqdx"]
+
+[ext_resource type="Script" uid="uid://c057ot2xslgac" path="res://Scripts/Bullet.gd" id="1_hct83"]
+[ext_resource type="Material" uid="uid://olw4dby6uyn0" path="res://Materials/Unlit.tres" id="3_q7wqx"]
+[ext_resource type="Script" uid="uid://bmvqnow50f2q8" path="res://addons/LineRenderer/line_renderer.gd" id="3_ulcdk"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oduel"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_ycag2"]
+
+[sub_resource type="GDScript" id="GDScript_dnqyx"]
+script/source = "class_name TrailRenderer
+extends LineRenderer
+
+
+@export var lifetime: float = 1.0
+@export var min_vertex_distance: float = 0.5
+@export var is_emitting: bool = true
+
+var _trail_pieces: Array = []
+var _is_emitting_last_frame: bool
+
+
+func _enter_tree() -> void:
+	super._enter_tree()
+	#_trail_pieces.append(TrailPiece.new(self))
+
+
+func _process(delta: float) -> void:
+	if not _is_emitting_last_frame and is_emitting:
+		if _trail_pieces.size() == 0 or _trail_pieces[0].is_dirty():
+			_trail_pieces.insert(0, TrailPiece.new(self))
+	_is_emitting_last_frame = is_emitting
+
+	if _trail_pieces.size() > 0:
+		_trail_pieces[0].on_delete_complete = _on_delete_complete
+
+	for trail_piece in _trail_pieces:
+		if is_instance_valid(trail_piece) and not trail_piece.is_queued_for_deletion():
+			trail_piece.process(delta)
+
+
+func _on_delete_complete() -> void:
+	var last_idx: int = _trail_pieces.size() - 1
+	_trail_pieces.remove_at(last_idx)
+"
+
+[sub_resource type="Curve" id="Curve_ycag2"]
+_limits = [0.0, 0.09765356, 0.0, 1.0]
+_data = [Vector2(0, 0), 0.0, 0.09765355, 0, 1, Vector2(1, 0.09765356), 0.09765355, 0.0, 1, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_6afsh"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_xjght"]
+properties/0/path = NodePath(".:BOUNCES")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:SPEED")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath(".:scale")
+properties/2/spawn = true
+properties/2/replication_mode = 0
+properties/3/path = NodePath(".:rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 0
+properties/4/path = NodePath(".:position")
+properties/4/spawn = true
+properties/4/replication_mode = 0
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_ulcdk"]
+
+[node name="Bullet" type="CharacterBody3D" unique_id=1029748120 node_paths=PackedStringArray("trail")]
+collision_layer = 2
+collision_mask = 3
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+motion_mode = 1
+slide_on_ceiling = false
+wall_min_slide_angle = 0.0
+script = ExtResource("1_hct83")
+trail = NodePath("LineRenderer3D")
+trailLen = 60
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1691960709]
+transform = Transform3D(0.25, 0, 0, 0, -1.0927847e-08, -0.25, 0, 0.25, -1.0927847e-08, 0, 0, 0)
+shape = SubResource("CapsuleShape3D_oduel")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1261877591]
+transform = Transform3D(0.25, 0, 0, 0, -1.0927847e-08, -0.25, 0, 0.25, -1.0927847e-08, 0, 0, 0)
+layers = 2
+mesh = SubResource("CapsuleMesh_ycag2")
+
+[node name="TrailRenderer" type="Node3D" parent="." unique_id=2127955131]
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+script = SubResource("GDScript_dnqyx")
+lifetime = null
+min_vertex_distance = 0.01
+is_emitting = null
+curve = SubResource("Curve_ycag2")
+alignment = 2
+world_space = null
+material = ExtResource("3_q7wqx")
+cast_shadows = null
+color_gradient = SubResource("Gradient_6afsh")
+texture_mode = null
+metadata/_custom_type_script = "uid://brqh6t5d1dyrl"
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1769628162]
+replication_interval = 1.0
+replication_config = SubResource("SceneReplicationConfig_xjght")
+visibility_update_mode = 1
+
+[node name="VisibleOnScreenEnabler3D" type="VisibleOnScreenEnabler3D" parent="." unique_id=1476215299]
+aabb = AABB(-0.1577665, -0.1863756, -0.2621614, 0.315533, 0.3727512, 0.5243228)
+
+[node name="LineRenderer3D" type="MeshInstance3D" parent="." unique_id=961576495]
+mesh = SubResource("ImmediateMesh_ulcdk")
+script = ExtResource("3_ulcdk")
+metadata/_custom_type_script = "uid://bmvqnow50f2q8"
+
+[connection signal="screen_exited" from="VisibleOnScreenEnabler3D" to="." method="Destroy"]

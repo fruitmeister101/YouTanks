@@ -1,0 +1,103 @@
+[gd_scene format=3 uid="uid://cj34qwbg24gp8"]
+
+[ext_resource type="Script" uid="uid://7ngg6vocw33k" path="res://Scripts/Tanks/TankMover.gd" id="1_j8ex0"]
+[ext_resource type="PackedScene" uid="uid://d18aylqansqdx" path="res://Scenes/TankSpawns/bullet.tscn" id="2_od4ed"]
+[ext_resource type="PackedScene" uid="uid://dltqymjoy41dg" path="res://Scenes/TankSpawns/track.tscn" id="3_o5trq"]
+[ext_resource type="Material" uid="uid://dpg8md3fwcsva" path="res://Materials/Tank1.tres" id="4_g4gs1"]
+[ext_resource type="Material" uid="uid://ujgvap48e85n" path="res://Materials/Tank3.tres" id="5_ewfb5"]
+[ext_resource type="Material" uid="uid://8ynalyhfyhbm" path="res://Materials/LineMaterial.tres" id="6_f3f40"]
+[ext_resource type="Script" uid="uid://bmvqnow50f2q8" path="res://addons/LineRenderer/line_renderer.gd" id="7_twseu"]
+[ext_resource type="Material" uid="uid://b34r42676vic" path="res://Materials/Tank2.tres" id="8_h8kqq"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_0j3ql"]
+height = 1.25
+
+[sub_resource type="SphereMesh" id="SphereMesh_snc5l"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fbtf3"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_elvtb"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_l8ytb"]
+top_radius = 0.1
+bottom_radius = 0.1
+height = 1.0
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_2vepx"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_4rnvw"]
+height = 1.465
+
+[node name="MoverTank" type="CharacterBody3D" unique_id=1118232497 node_paths=PackedStringArray("FiringPoint", "TrackPlacers", "BarrelAiming", "line")]
+slide_on_ceiling = false
+script = ExtResource("1_j8ex0")
+MOVESPEED = 3.0
+TURNSPEED = 3.0
+BARRELAIMSPEED = 0.25
+BULLETCOOLDOWN = 3.0
+bullet = ExtResource("2_od4ed")
+FiringPoint = NodePath("MainBody/Node3D/TurretRotator/Barrel/FiringPoint")
+TrackPlacers = [NodePath("MainBody/Node3D/WheelRight/TrackPlacer"), NodePath("MainBody/Node3D/WheelLeft/TrackPlacer")]
+Track = ExtResource("3_o5trq")
+trackDist = 0.5
+BarrelAiming = NodePath("MainBody/Node3D/TurretRotator")
+line = NodePath("MainBody/Node3D/TurretRotator/Barrel/FiringPoint/LineRenderer3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1020733289]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6, 0)
+shape = SubResource("CylinderShape3D_0j3ql")
+
+[node name="MainBody" type="MeshInstance3D" parent="." unique_id=918243672]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+layers = 2
+material_override = ExtResource("4_g4gs1")
+mesh = SubResource("SphereMesh_snc5l")
+
+[node name="Node3D" type="Node3D" parent="MainBody" unique_id=200739204]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
+
+[node name="WheelRight" type="MeshInstance3D" parent="MainBody/Node3D" unique_id=1489161204]
+transform = Transform3D(0.65000004, 0, 0, 0, -2.8412403e-08, -0.65000004, 0, 0.65000004, -2.8412403e-08, 0.5500001, -0.52500004, 0)
+layers = 2
+material_override = ExtResource("4_g4gs1")
+mesh = SubResource("CapsuleMesh_fbtf3")
+
+[node name="TrackPlacer" type="Node3D" parent="MainBody/Node3D/WheelRight" unique_id=190624727]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2.149029e-08, 0.45)
+
+[node name="WheelLeft" type="MeshInstance3D" parent="MainBody/Node3D" unique_id=523256645]
+transform = Transform3D(0.65000004, 0, 0, 0, -2.8412403e-08, -0.65000004, 0, 0.65000004, -2.8412403e-08, -0.5500001, -0.52500004, 0)
+layers = 2
+material_override = ExtResource("4_g4gs1")
+mesh = SubResource("CapsuleMesh_elvtb")
+
+[node name="TrackPlacer" type="Node3D" parent="MainBody/Node3D/WheelLeft" unique_id=1631883076]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2.149029e-08, 0.45)
+
+[node name="TurretRotator" type="Node3D" parent="MainBody/Node3D" unique_id=734069323]
+transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0)
+
+[node name="Barrel" type="MeshInstance3D" parent="MainBody/Node3D/TurretRotator" unique_id=133830805]
+transform = Transform3D(-0.65, 5.6824803e-08, 0, 2.483891e-15, 2.8412401e-08, -0.65, -5.6824803e-08, -0.65, -2.8412401e-08, 0, 0, -0.6)
+layers = 2
+material_override = ExtResource("5_ewfb5")
+mesh = SubResource("CylinderMesh_l8ytb")
+
+[node name="FiringPoint" type="Node3D" parent="MainBody/Node3D/TurretRotator/Barrel" unique_id=643449663]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.5, 0)
+
+[node name="LineRenderer3D" type="MeshInstance3D" parent="MainBody/Node3D/TurretRotator/Barrel/FiringPoint" unique_id=237872926]
+material_override = ExtResource("6_f3f40")
+mesh = SubResource("ImmediateMesh_2vepx")
+script = ExtResource("7_twseu")
+points = Array[Vector3]([Vector3(0, 0, 0), Vector3(0, 0, 5)])
+end_thickness = 0.05
+metadata/_custom_type_script = "uid://bmvqnow50f2q8"
+
+[node name="Port" type="Node3D" parent="MainBody/Node3D" unique_id=1132775586]
+transform = Transform3D(-1.0927847e-08, -0.5, 0, 0.25, -2.1855694e-08, 0, 0, 0, 0.25, 0, 0, -0.4)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MainBody/Node3D/Port" unique_id=1492554417]
+layers = 2
+material_override = ExtResource("8_h8kqq")
+mesh = SubResource("CapsuleMesh_4rnvw")

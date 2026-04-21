@@ -1,0 +1,7 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dpg8md3fwcsva"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lw0gn"]
+
+[resource]
+next_pass = SubResource("ShaderMaterial_lw0gn")
+albedo_color = Color(0.0085161105, 0.46998668, 0.41117132, 1)
