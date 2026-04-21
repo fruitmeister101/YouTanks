@@ -38,28 +38,28 @@ func _ready() -> void:
 				sync.replication_config.property_set_replication_mode(stat,SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
 
 func _physics_process(delta: float) -> void:
-	armed -= delta
-	if BULLETLIFETIME <= 0:
-		Destroy()
-	else:
-		BULLETLIFETIME -= delta
-	
-	if cast.is_colliding():
-		var d : float = (cast.get_collision_point(0) - global_position).length()
-		velocity = transform.basis.z.normalized() * min(d / 2.0,BULLETSPEED * delta)
-	else:
-		velocity = transform.basis.z.normalized() * (BULLETSPEED) * delta
-	var col = move_and_collide(velocity)
-	if col:
-		Collision(col.get_collider(), col.get_normal())
+	if is_multiplayer_authority():
+		armed -= delta
+		if BULLETLIFETIME <= 0:
+			Destroy()
+		else:
+			BULLETLIFETIME -= delta
+		
+		if cast.is_colliding():
+			var d : float = (cast.get_collision_point(0) - global_position).length()
+			velocity = transform.basis.z.normalized() * min(d / 2.0,BULLETSPEED * delta)
+		else:
+			velocity = transform.basis.z.normalized() * (BULLETSPEED) * delta
+		var col = move_and_collide(velocity)
+		if col:
+			Collision(col.get_collider(), col.get_normal())
 
 func HitArea(node : Area3D):
-	if armed < 0:
-		Collision(node.get_parent_node_3d())
+	if is_multiplayer_authority():
+		if armed < 0:
+			Collision(node.get_parent_node_3d())
 
 func Collision(node : Node3D, norm : Vector3 = Vector3.UP):
-	if not is_multiplayer_authority(): 
-		return
 	if node is Bullet:
 		TakeDamage(node.BULLETDAMAGE)
 		node.TakeDamage.rpc(BULLETDAMAGE)

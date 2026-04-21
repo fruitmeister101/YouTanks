@@ -89,6 +89,7 @@ func SetUp(id:int) -> void:
 				if not sync.replication_config.has_property(stat):
 					sync.replication_config.add_property(stat)
 					sync.replication_config.property_set_replication_mode(stat,SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
+		sync.set_multiplayer_authority(id)
 
 
 func HandleTargeting(_delta: float = 0) -> void:
