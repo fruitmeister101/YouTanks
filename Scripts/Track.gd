@@ -4,13 +4,12 @@ extends Node3D
 @export var m : MeshInstance3D
 
 func _physics_process(delta: float) -> void:
-	if is_multiplayer_authority():
-		timeToLive -= delta
-		if timeToLive <= 0:
-			Destroy.rpc()
-		if timeToLive <= 2:
-			m.set_instance_shader_parameter("Alpha", timeToLive / 2.0)
-			pass
+	timeToLive -= delta
+	if timeToLive <= 0 and is_multiplayer_authority():
+		Destroy.rpc()
+	if timeToLive <= 4:
+		m.set_instance_shader_parameter("Alpha", clamp(timeToLive / 4.0, 0, 1))
+		pass
 
 @rpc("any_peer","call_local")
 func Destroy():

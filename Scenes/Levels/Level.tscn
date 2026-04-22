@@ -4,6 +4,7 @@
 [ext_resource type="Material" uid="uid://ncd4wr603yq7" path="res://Materials/Floor.tres" id="2_81xng"]
 [ext_resource type="PackedScene" uid="uid://bs6npnqxm08ns" path="res://Scenes/ObjectSpawns/MoverTankContainer.tscn" id="2_bk2yi"]
 [ext_resource type="PackedScene" uid="uid://goyvabnjgst8" path="res://Scenes/ObjectSpawns/BasicTankContainer.tscn" id="3_5lnup"]
+[ext_resource type="PackedScene" uid="uid://bguvl1bxsh6dr" path="res://Scenes/Upgrades/MiniMines.tscn" id="5_5lnup"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tumq0"]
 albedo_color = Color(0, 0.25882354, 0.2901961, 1)
@@ -21,6 +22,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 material_override = ExtResource("2_81xng")
 use_collision = true
+collision_layer = 7
+collision_mask = 0
 size = Vector3(25, 2, 25)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="Static Floor/CSGBox3D" unique_id=1827579014]
@@ -54,6 +57,9 @@ offset_bottom = 62.0
 grow_horizontal = 0
 text = "Spawn Random Upgrade
 "
+
+[node name="MiniMines" parent="." unique_id=1827872960 instance=ExtResource("5_5lnup")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.09004688, 1, -0.02238226)
 
 [connection signal="pressed" from="SpawnEnemyButton" to="." method="SpawnRandomEnemy"]
 [connection signal="pressed" from="SpawnUpgradeButton" to="." method="SpawnRandomUpgrade"]

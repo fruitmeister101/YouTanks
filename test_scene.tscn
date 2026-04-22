@@ -1,0 +1,57 @@
+[gd_scene format=3 uid="uid://cit012sk7r7bn"]
+
+[ext_resource type="Shader" uid="uid://duobgvux66845" path="res://test_shader.tres" id="1_uhqqe"]
+[ext_resource type="Shader" uid="uid://cilldg3bsvlaj" path="res://node_test_shader.tres" id="2_ia1lp"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ia1lp"]
+render_priority = 0
+shader = ExtResource("1_uhqqe")
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_6adnx"]
+material = SubResource("ShaderMaterial_ia1lp")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_uhqqe"]
+render_priority = 0
+shader = ExtResource("2_ia1lp")
+shader_parameter/Animate = false
+shader_parameter/Scale = 50.0
+shader_parameter/Distance_Scale = 1.0
+shader_parameter/Distance_Function = 0
+shader_parameter/Jitter = 1.0
+shader_parameter/Return_Type = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_uhqqe"]
+material = SubResource("ShaderMaterial_uhqqe")
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_ia1lp"]
+noise_type = 2
+frequency = 0.0185
+fractal_type = 0
+fractal_octaves = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_ia1lp"]
+width = 2048
+height = 2048
+noise = SubResource("FastNoiseLite_ia1lp")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sasra"]
+albedo_texture = SubResource("NoiseTexture2D_ia1lp")
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ia1lp"]
+material = SubResource("StandardMaterial3D_sasra")
+
+[node name="Node3D" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.03063e-05, -0.000847816, 0.00444722)
+
+[node name="TestGraph" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("PlaneMesh_6adnx")
+
+[node name="PluginTestGraph" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.15069, 0, 0)
+mesh = SubResource("PlaneMesh_uhqqe")
+
+[node name="NoiseImage" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00484645, 1.19209e-07, -2.24598)
+mesh = SubResource("PlaneMesh_ia1lp")

@@ -27,10 +27,11 @@ outline_color = Color(0, 0, 0, 1)
 [sub_resource type="CylinderMesh" id="CylinderMesh_4qfi5"]
 
 [node name="Speedy" type="RigidBody3D" unique_id=1827872960 node_paths=PackedStringArray("label")]
-mass = 0.1
 can_sleep = false
 script = ExtResource("1_0754i")
 label = NodePath("Label")
+
+[node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=710973833]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1465856074]
 replication_config = SubResource("SceneReplicationConfig_rxtrn")
@@ -62,3 +63,11 @@ script = ExtResource("3_6xue8")
 Mod = 2
 ModHow = 2
 ModAmount = 5.0
+
+[node name="Up3" type="Node" parent="." unique_id=1884106097]
+script = ExtResource("3_6xue8")
+Mod = 5
+ModHow = 1
+ModAmount = 0.5
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Destory"]

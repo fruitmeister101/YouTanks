@@ -1,0 +1,306 @@
+[gd_resource type="VisualShader" format=3 uid="uid://cilldg3bsvlaj"]
+
+[ext_resource type="Script" uid="uid://dmxaxd3iqjs7t" path="res://addons/shadernoiselib/voronoi_noise.gd" id="1_8jh6y"]
+[ext_resource type="Script" uid="uid://c7xtl35yuoc0k" path="res://addons/shadernoiselib/perlin_noise.gd" id="2_qiej6"]
+[ext_resource type="Script" uid="uid://xgs7bbdbves0" path="res://addons/shadernoiselib/pixel_noise.gd" id="3_kd13p"]
+
+[sub_resource type="VisualShaderNodeIntParameter" id="VisualShaderNodeIntParameter_8jh6y"]
+parameter_name = "Return_Type"
+hint = 3
+enum_names = PackedStringArray("Cell value", "Distance", "Distance2")
+default_value_enabled = true
+default_value = 1
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_8jh6y"]
+parameter_name = "Scale"
+hint = 1
+max = 999999.0
+default_value_enabled = true
+default_value = 5.0
+
+[sub_resource type="VisualShaderNodeExpression" id="VisualShaderNodeExpression_8jh6y"]
+size = Vector2(680, 460)
+expression = "// I'm using this expression because it is simpler to switch on an expression
+switch(returnType) {
+	case 0: output = cell;
+	break;
+	case 1: output = dist;
+	break;
+	case 2: output = dist2;
+	break;
+}"
+
+[sub_resource type="VisualShaderNodeSwitch" id="VisualShaderNodeSwitch_8jh6y"]
+default_input_values = [0, false, 1, Vector3(1, 1, 1), 2, Vector3(0, 0, 0)]
+op_type = 4
+
+[sub_resource type="VisualShaderNodeBooleanParameter" id="VisualShaderNodeBooleanParameter_qiej6"]
+parameter_name = "Animate"
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_qiej6"]
+parameter_name = "Jitter"
+hint = 1
+min = -5.0
+max = 5.0
+default_value_enabled = true
+default_value = 1.0
+
+[sub_resource type="VisualShaderNodeIntParameter" id="VisualShaderNodeIntParameter_qiej6"]
+parameter_name = "Distance_Function"
+hint = 3
+enum_names = PackedStringArray("Euclidean", "Euclidean Squared", "Manhattan", "Hybrid")
+default_value_enabled = true
+
+[sub_resource type="VisualShaderNodeCustom" id="VisualShaderNodeCustom_8jh6y"]
+default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(0, 0, 0), 2, Vector3(10, 10, 10), 3, 0.75, 4, 0, 5, 1.0, 6, false]
+initialized = true
+script = ExtResource("1_8jh6y")
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_kd13p"]
+parameter_name = "Distance_Scale"
+hint = 1
+min = 0.01
+max = 10.0
+default_value_enabled = true
+default_value = 1.0
+
+[sub_resource type="VisualShaderNodeCustom" id="VisualShaderNodeCustom_4gcqo"]
+output_port_for_preview = 0
+default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(0, 0, 0), 2, Vector3(10, 10, 10), 3, 0.0]
+initialized = true
+script = ExtResource("2_qiej6")
+
+[sub_resource type="VisualShaderNodeCustom" id="VisualShaderNodeCustom_k806d"]
+output_port_for_preview = 0
+default_input_values = [0, Vector3(0, 0, 0), 1, Vector3(-0.3, -0.3, 0), 2, Vector3(21, 21, 21)]
+initialized = true
+script = ExtResource("3_kd13p")
+
+[sub_resource type="VisualShaderNodeFloatConstant" id="VisualShaderNodeFloatConstant_kd13p"]
+constant = 100.0
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_kd13p"]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeVectorCompose" id="VisualShaderNodeVectorCompose_8jh6y"]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_qiej6"]
+input_name = "time"
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+uniform bool Animate;
+uniform float Scale : hint_range(0.0, 999999.0) = 5.0;
+uniform float Distance_Scale : hint_range(0.00999999977648, 10.0) = 1.0;
+uniform int Distance_Function : hint_enum(\"Euclidean\", \"Euclidean Squared\", \"Manhattan\", \"Hybrid\") = 0;
+uniform float Jitter : hint_range(-5.0, 5.0) = 1.0;
+uniform int Return_Type : hint_enum(\"Cell value\", \"Distance\", \"Distance2\") = 1;
+
+
+// VoronoiNoise3D
+
+	vec3 voronoi_noise_hash_noise_range( vec3 p ) {
+		p *= mat3(vec3(-4252.151, 3441.637, -1331.937), vec3(7569.135, -134.389, 5377.171754), vec3(-3301.746, 247.317, 2715.364));
+		vec3 result = fract(fract(p)*6753.7245) -1.;
+		return 2.0 * fract(vec3((result.x + result.y + result.z) / 3.) * vec3(15714.5427, 7541.5254, 54224.7245)) -1.;
+		
+		//p = mod(p * p.zxy + p.yzx, 96.267); // New pseudo-random step which improves the noise function here
+		//p = p + p.zxy - p.yzx;
+		//p *= mat3(vec3(127.1, 311.7, -53.7), vec3(269.5, 183.3, 77.1), vec3(-301.7, 27.3, 215.3));
+		//return 2.0 * fract(fract(p)*4375.55) -1.;
+	}
+	
+	// Returns (value, dist, dist2)
+	vec3 voronoi_noise_sample( vec3 uvw, vec3 offset, vec3 scale, float distanceScale, int distanceFunc, float jitter, bool is3d ) {
+vec3 scaleUV = uvw * scale + offset;
+if(!is3d) {
+	scaleUV = vec3(scaleUV.xy, 0.);
+}
+vec3 remainder = mod(scaleUV, 1.0);
+vec3 roundUV = floor(scaleUV);
+
+int expand = 2;
+float minFound = 999.;
+float found2 = 1.; // Second closest value found
+float cellValue = 0.; // Celluar value, random for each position, but consistent.
+for(int x = -expand; x < expand*2; x++) {
+	for(int y = -expand; y < expand*2; y++) {
+		for(int z = (!is3d ? 0 : -expand); z < (!is3d ? 1 : expand*2); z++) {
+			vec3 offset = vec3(float(x), float(y), float(z));
+			vec3 testUV = floor(scaleUV + offset);
+			
+			vec3 possibleCellValue = (voronoi_noise_hash_noise_range(vec3(testUV)) * jitter);
+			vec3 distTarget = possibleCellValue + offset;
+			if (!is3d) {
+				distTarget = vec3(distTarget.xy, 0.);
+			}
+			float dist = 1.;
+			vec3 diff = distTarget - remainder;
+			switch(distanceFunc) {
+				case 0: // Comparisons between squared and rooted are the same, it's cheaper to calculate with squared
+				case 1:
+					vec3 distV = vec3(pow(distTarget.x - remainder.x, 2.), pow(distTarget.y - remainder.y, 2.), pow(distTarget.z - remainder.z, 2.));
+					dist = distV.x + distV.y + distV.z;
+				break;
+				case 2: dist = abs(remainder.x - distTarget.x) + abs(remainder.y - distTarget.y) + abs(remainder.z - distTarget.z); // Manhattan
+				break;
+				case 3:
+					vec3 distV = vec3(pow(distTarget.x - remainder.x, 2.), pow(distTarget.y - remainder.y, 2.), pow(distTarget.z - remainder.z, 2.));
+					float distSquared = distV.x + distV.y + distV.z;
+					
+					float distManhattanSquared = pow(abs(remainder.x - distTarget.x) + abs(remainder.y - distTarget.y) + abs(remainder.z - distTarget.z), 2.);
+					dist = (distSquared + distManhattanSquared) / 2.; // Hybrid
+				break;
+			}
+			dist *= distanceScale;
+			// float dist = distance(remainder, distTarget);
+			if(dist < minFound) {
+				found2 = minFound;
+				minFound = dist;
+				cellValue = fract(possibleCellValue.x);
+				// cellValue = ((voronoi_noise_hash_noise_range(testUV) + 1.) / 2.).x;
+			}
+			else if (dist < found2) {
+				found2 = dist;
+			}
+		}
+	}
+}
+
+if (distanceFunc == 0 || distanceFunc == 3) { // Euclidian or hybrid
+	minFound = sqrt(minFound);
+	found2 = sqrt(found2);
+}
+
+return vec3(cellValue, clamp(minFound, 0., 1.), clamp(found2, 0., 1.));
+	}
+	
+
+void fragment() {
+// Input:3
+	vec2 n_out3p0 = UV;
+
+
+// BooleanParameter:14
+	bool n_out14p0 = Animate;
+
+
+// Input:6
+	float n_out6p0 = TIME;
+
+
+// VectorCompose:5
+	float n_in5p0 = 0.00000;
+	float n_in5p1 = 0.00000;
+	vec3 n_out5p0 = vec3(n_in5p0, n_in5p1, n_out6p0);
+
+
+	vec3 n_out13p0;
+// Switch:13
+	vec3 n_in13p2 = vec3(0.00000, 0.00000, 0.00000);
+	n_out13p0 = mix(n_in13p2, n_out5p0, float(n_out14p0));
+
+
+// FloatParameter:11
+	float n_out11p0 = Scale;
+
+
+// FloatParameter:19
+	float n_out19p0 = Distance_Scale;
+
+
+// IntParameter:17
+	int n_out17p0 = Distance_Function;
+
+
+// FloatParameter:15
+	float n_out15p0 = Jitter;
+
+
+	float n_out18p0;
+	float n_out18p1;
+	float n_out18p2;
+// VoronoiNoise3D:18
+	{
+		
+				vec3 result = voronoi_noise_sample(vec3(n_out3p0, 0.0), n_out13p0, vec3(n_out11p0), n_out19p0, n_out17p0, n_out15p0, n_out14p0);
+				n_out18p0 = result[0];
+				n_out18p1 = result[1];
+				n_out18p2 = result[2];
+			
+	}
+
+
+// IntParameter:10
+	int n_out10p0 = Return_Type;
+
+
+	float n_out12p0;
+// Expression:12
+	n_out12p0 = 0.0;
+	{
+		// I'm using this expression because it is simpler to switch on an expression
+		switch(n_out10p0) {
+			case 0: n_out12p0 = n_out18p0;
+			break;
+			case 1: n_out12p0 = n_out18p1;
+			break;
+			case 2: n_out12p0 = n_out18p2;
+			break;
+		}
+	}
+
+
+// Output:0
+	ALBEDO = vec3(n_out12p0);
+
+
+}
+"
+graph_offset = Vector2(-400.696, 37.159)
+nodes/fragment/0/position = Vector2(900, 400)
+nodes/fragment/3/node = SubResource("VisualShaderNodeInput_kd13p")
+nodes/fragment/3/position = Vector2(-800, 160)
+nodes/fragment/5/node = SubResource("VisualShaderNodeVectorCompose_8jh6y")
+nodes/fragment/5/position = Vector2(-760, 500)
+nodes/fragment/6/node = SubResource("VisualShaderNodeInput_qiej6")
+nodes/fragment/6/position = Vector2(-1060, 620)
+nodes/fragment/10/node = SubResource("VisualShaderNodeIntParameter_8jh6y")
+nodes/fragment/10/position = Vector2(-1080, 1640)
+nodes/fragment/11/node = SubResource("VisualShaderNodeFloatParameter_8jh6y")
+nodes/fragment/11/position = Vector2(-1060, 800)
+nodes/fragment/12/node = SubResource("VisualShaderNodeExpression_8jh6y")
+nodes/fragment/12/position = Vector2(180, 400)
+nodes/fragment/12/size = Vector2(680, 460)
+nodes/fragment/12/input_ports = "0,0,cell;1,0,dist;2,0,dist2;3,1,returnType;"
+nodes/fragment/12/output_ports = "0,0,output;"
+nodes/fragment/12/expression = "// I'm using this expression because it is simpler to switch on an expression
+switch(returnType) {
+	case 0: output = cell;
+	break;
+	case 1: output = dist;
+	break;
+	case 2: output = dist2;
+	break;
+}"
+nodes/fragment/13/node = SubResource("VisualShaderNodeSwitch_8jh6y")
+nodes/fragment/13/position = Vector2(-380, 400)
+nodes/fragment/14/node = SubResource("VisualShaderNodeBooleanParameter_qiej6")
+nodes/fragment/14/position = Vector2(-1060, 1200)
+nodes/fragment/15/node = SubResource("VisualShaderNodeFloatParameter_qiej6")
+nodes/fragment/15/position = Vector2(-1220, 300)
+nodes/fragment/17/node = SubResource("VisualShaderNodeIntParameter_qiej6")
+nodes/fragment/17/position = Vector2(-1080, 1920)
+nodes/fragment/18/node = SubResource("VisualShaderNodeCustom_8jh6y")
+nodes/fragment/18/position = Vector2(-100, 380)
+nodes/fragment/19/node = SubResource("VisualShaderNodeFloatParameter_kd13p")
+nodes/fragment/19/position = Vector2(-120, 1040)
+nodes/fragment/20/node = SubResource("VisualShaderNodeCustom_4gcqo")
+nodes/fragment/20/position = Vector2(-80, -220)
+nodes/fragment/21/node = SubResource("VisualShaderNodeCustom_k806d")
+nodes/fragment/21/position = Vector2(380, 60)
+nodes/fragment/22/node = SubResource("VisualShaderNodeFloatConstant_kd13p")
+nodes/fragment/22/position = Vector2(120, 200)
+nodes/fragment/connections = PackedInt32Array(6, 0, 5, 2, 5, 0, 13, 1, 14, 0, 13, 0, 10, 0, 12, 3, 14, 0, 18, 6, 15, 0, 18, 5, 17, 0, 18, 4, 11, 0, 18, 2, 13, 0, 18, 1, 18, 0, 12, 0, 18, 1, 12, 1, 18, 2, 12, 2, 19, 0, 18, 3, 3, 0, 18, 0, 3, 0, 20, 0, 3, 0, 21, 0, 22, 0, 21, 2, 12, 0, 0, 0)

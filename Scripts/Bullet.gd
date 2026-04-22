@@ -9,17 +9,29 @@ class_name Bullet extends CharacterBody3D
 @export var BULLETBOUNCES : int = 2
 @export var BULLETBOUNCEOFFENEMY : int = 0
 @export var BULLETLIFETIME : float = 25.0
-@export var BULLETDAMAGE : float = 0.5
+@export var BULLETDAMAGE : float = 0.5:
+	set(value):
+		BULLETDAMAGE = max(value, 0.1)
 @export var BULLETSIZE : float = 1:
 	set(value):
 		var ratio = value / BULLETSIZE
 		scale *= ratio
 		BULLETSIZE = value
+@export var BULLETTRON : int = 0:
+	set(value):
+		BULLETTRON = value
+		trailTron.troning = value > 0
+@export var BULLETTRAILLENGTH : float = 1:
+	set(value):
+		BULLETTRAILLENGTH = value
+		trail.lifetime = value
 
-@export var trail : LineRenderer
+
+@export var trail : TrailRenderer
 @export var trailLen : int
 @export var cast : ShapeCast3D
 @export var sync : MultiplayerSynchronizer
+@export var trailTron : Tronizer
 signal Died
 var died :bool = false
 var points : Array[Vector3]
@@ -32,13 +44,16 @@ func _ready() -> void:
 		var stats = Upgrade.StatChange.keys()
 		stats.sort()
 		for stat : String in stats:
-			stat = ".:" + stat.to_upper()
+			stat =  stat.to_upper()
 			if stat in self:
+				stat = ".:" + stat
+				if sync.replication_config.has_property(stat):
+					continue
 				sync.replication_config.add_property(stat)
 				sync.replication_config.property_set_replication_mode(stat,SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
 
 func _physics_process(delta: float) -> void:
-	if is_multiplayer_authority():
+	#if is_multiplayer_authority():
 		armed -= delta
 		if BULLETLIFETIME <= 0:
 			Destroy()
@@ -47,7 +62,7 @@ func _physics_process(delta: float) -> void:
 		
 		if cast.is_colliding():
 			var d : float = (cast.get_collision_point(0) - global_position).length()
-			velocity = transform.basis.z.normalized() * min(d / 2.0,BULLETSPEED * delta)
+			velocity = transform.basis.z.normalized() * min(d ,BULLETSPEED * delta)
 		else:
 			velocity = transform.basis.z.normalized() * (BULLETSPEED) * delta
 		var col = move_and_collide(velocity)
@@ -96,6 +111,10 @@ func Destroy() -> void:
 		hide()
 		Died.emit()
 		died = true
-		trail.reparent(get_parent())
-		trail.get_child(0).trailing = false
+		ReparentTrail.rpc()
 		queue_free()
+
+@rpc("any_peer","call_local")
+func ReparentTrail():
+	trail.reparent(get_parent())
+	trail.is_emitting = false

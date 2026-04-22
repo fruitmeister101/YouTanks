@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://daas1mtu2wvv8"]
+
+[ext_resource type="Shader" uid="uid://d10pifrkslwok" path="res://Materials/Intersection.tres" id="1_ftcor"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_ftcor")

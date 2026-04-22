@@ -34,8 +34,9 @@ func SetLabel():
 	
 
 func _physics_process(_delta: float) -> void:
-	var mypos : Vector2 = mainCam.unproject_position(global_position)
-	label.position = mypos - label.size / 2.0
+	if not claimed:
+		var mypos : Vector2 = mainCam.unproject_position(global_position)
+		label.position = mypos - label.size / 2.0
 
 @rpc("any_peer","call_local","reliable")
 func Claim(s : String):
@@ -49,6 +50,7 @@ func Claim(s : String):
 				position += Vector3.UP * 100
 				freeze = true
 				claimed = true
+				label.hide()
 				hide()
 
 @rpc("any_peer","call_local","reliable")
@@ -65,4 +67,9 @@ func UnClaim(s : String):
 				position = tank.position + Vector3.UP * 2.0
 				freeze = false
 				claimed = false
+				label.show()
 				show()
+
+func Destory():
+	if not claimed:
+		queue_free()

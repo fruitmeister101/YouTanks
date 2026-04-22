@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://t6vd13gwufgk"]
+
+[ext_resource type="Shader" uid="uid://dm4ke5f6lyepa" path="res://Materials/Glowy.tres" id="1_qsf3v"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_qsf3v")

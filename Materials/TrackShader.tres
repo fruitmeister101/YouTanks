@@ -13,10 +13,17 @@ max = 255.0
 default_value_enabled = true
 default_value = 1.0
 
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_jnfcr"]
+parameter_name = "Glow"
+qualifier = 2
+default_value = Color(0, 0, 0, 1)
+
 [resource]
 nodes/vertex/0/position = Vector2(360, 180)
 nodes/fragment/2/node = SubResource("VisualShaderNodeColorParameter_vhxch")
 nodes/fragment/2/position = Vector2(-20, 180)
 nodes/fragment/3/node = SubResource("VisualShaderNodeFloatParameter_jnfcr")
 nodes/fragment/3/position = Vector2(-20, 400)
-nodes/fragment/connections = PackedInt32Array(2, 0, 0, 0, 3, 0, 0, 1)
+nodes/fragment/4/node = SubResource("VisualShaderNodeColorParameter_jnfcr")
+nodes/fragment/4/position = Vector2(-20, 620)
+nodes/fragment/connections = PackedInt32Array(2, 0, 0, 0, 3, 0, 0, 1, 4, 0, 0, 5)

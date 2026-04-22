@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://c3q0de3msx3we"]
+
+[ext_resource type="Script" uid="uid://c51bdiuviq6gx" path="res://Scripts/Upgrades/UpgradeObject.gd" id="1_7cvxv"]
+[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/Track.tres" id="2_3m4eq"]
+[ext_resource type="Script" uid="uid://dahavuogmwntv" path="res://Scripts/Upgrades/BaseUpgrade.gd" id="3_t4oob"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rxtrn"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:rotation")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:freeze")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+properties/3/path = NodePath(".:claimed")
+properties/3/spawn = true
+properties/3/replication_mode = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_rxtrn"]
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_5y0wf"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_4qfi5"]
+
+[node name="Tron" type="RigidBody3D" unique_id=1827872960 node_paths=PackedStringArray("label")]
+can_sleep = false
+script = ExtResource("1_7cvxv")
+label = NodePath("Label")
+
+[node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=830728114]
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1465856074]
+replication_config = SubResource("SceneReplicationConfig_rxtrn")
+
+[node name="Label" type="Label" parent="." unique_id=1737203329]
+offset_right = 84.0
+offset_bottom = 49.0
+text = "+0.5 Speed
++1 Bounce"
+label_settings = SubResource("LabelSettings_rxtrn")
+horizontal_alignment = 1
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1742771327]
+shape = SubResource("CylinderShape3D_5y0wf")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=878445967]
+material_override = ExtResource("2_3m4eq")
+instance_shader_parameters/Color = Color(0.74509805, 1, 0.05490196, 1)
+mesh = SubResource("CylinderMesh_4qfi5")
+
+[node name="Up" type="Node" parent="." unique_id=845242669]
+script = ExtResource("3_t4oob")
+Mod = 21
+ModHow = 3
+ModAmount = 1.0
+
+[node name="Up2" type="Node" parent="." unique_id=851104857]
+script = ExtResource("3_t4oob")
+Mod = 17
+ModHow = 3
+ModAmount = 10.0
+
+[node name="Up3" type="Node" parent="." unique_id=1030998049]
+script = ExtResource("3_t4oob")
+Mod = 22
+ModHow = 3
+ModAmount = 5.0
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Destory"]

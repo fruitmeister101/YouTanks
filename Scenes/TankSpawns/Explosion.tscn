@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://ds4ifwlgii1u3"]
+
+[ext_resource type="Script" uid="uid://ckw205qskfhjr" path="res://Scripts/Explosion.gd" id="1_nh5j6"]
+[ext_resource type="Material" uid="uid://kqlxsnl4qo22" path="res://Materials/ExplosionMat.tres" id="2_3sogl"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_qe68m"]
+
+[node name="Explosion" type="Node3D" unique_id=1953758849 node_paths=PackedStringArray("m")]
+script = ExtResource("1_nh5j6")
+m = NodePath("MeshInstance3D")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1373208750]
+material_override = ExtResource("2_3sogl")
+instance_shader_parameters/Color = Color(1, 0, 0, 1)
+instance_shader_parameters/Color2 = Color(1, 1, 0, 1)
+instance_shader_parameters/Fade = 0.0
+instance_shader_parameters/SizeOfCell = 1.0
+instance_shader_parameters/Thickness = -0.49999997625000003
+mesh = SubResource("SphereMesh_qe68m")

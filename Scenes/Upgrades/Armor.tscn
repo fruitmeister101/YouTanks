@@ -30,10 +30,11 @@ outline_color = Color(0, 0, 0, 1)
 [sub_resource type="CylinderMesh" id="CylinderMesh_4qfi5"]
 
 [node name="Armor" type="RigidBody3D" unique_id=1827872960 node_paths=PackedStringArray("label")]
-mass = 0.1
 can_sleep = false
 script = ExtResource("1_udyat")
 label = NodePath("Label")
+
+[node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=1677423751]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1465856074]
 replication_config = SubResource("SceneReplicationConfig_rxtrn")
@@ -59,3 +60,5 @@ script = ExtResource("3_juvos")
 Mod = 4
 ModHow = 2
 ModAmount = 1.0
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Destory"]

@@ -1,0 +1,49 @@
+[gd_resource type="VisualShader" format=3 uid="uid://d10pifrkslwok"]
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_5wor2"]
+parameter_name = "Color"
+qualifier = 2
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_j72s0"]
+parameter_name = "Thickness"
+qualifier = 2
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_c3ue4"]
+parameter_name = "Opacity"
+qualifier = 2
+
+[sub_resource type="VisualShaderNodeLinearSceneDepth" id="VisualShaderNodeLinearSceneDepth_5wor2"]
+
+[sub_resource type="VisualShaderNodeSmoothStep" id="VisualShaderNodeSmoothStep_j72s0"]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_c3ue4"]
+output_port_for_preview = 3
+expanded_output_ports = [0]
+input_name = "vertex"
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_4cyqm"]
+
+[sub_resource type="VisualShaderNodeFloatFunc" id="VisualShaderNodeFloatFunc_4cyqm"]
+function = 31
+
+[resource]
+modes/cull = 2
+flags/unshaded = true
+nodes/fragment/0/position = Vector2(940, 140)
+nodes/fragment/2/node = SubResource("VisualShaderNodeLinearSceneDepth_5wor2")
+nodes/fragment/2/position = Vector2(-440, 120)
+nodes/fragment/3/node = SubResource("VisualShaderNodeSmoothStep_j72s0")
+nodes/fragment/3/position = Vector2(300, 200)
+nodes/fragment/4/node = SubResource("VisualShaderNodeInput_c3ue4")
+nodes/fragment/4/position = Vector2(-500, 260)
+nodes/fragment/5/node = SubResource("VisualShaderNodeFloatOp_4cyqm")
+nodes/fragment/5/position = Vector2(0, 300)
+nodes/fragment/9/node = SubResource("VisualShaderNodeFloatFunc_4cyqm")
+nodes/fragment/9/position = Vector2(540, 200)
+nodes/fragment/10/node = SubResource("VisualShaderNodeColorParameter_5wor2")
+nodes/fragment/10/position = Vector2(600, -20)
+nodes/fragment/11/node = SubResource("VisualShaderNodeFloatParameter_j72s0")
+nodes/fragment/11/position = Vector2(-40, 80)
+nodes/fragment/12/node = SubResource("VisualShaderNodeFloatParameter_c3ue4")
+nodes/fragment/12/position = Vector2(-40, -120)
+nodes/fragment/connections = PackedInt32Array(2, 0, 5, 0, 5, 0, 3, 2, 3, 0, 9, 0, 10, 0, 0, 0, 9, 0, 0, 1, 4, 3, 5, 1, 11, 0, 3, 1, 12, 0, 3, 0)

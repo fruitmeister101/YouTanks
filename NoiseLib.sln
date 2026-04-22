@@ -1,0 +1,19 @@
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NoiseLib", "NoiseLib.csproj", "{BFBB0986-C546-45CC-BB4C-E903923349AF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+	Debug|Any CPU = Debug|Any CPU
+	ExportDebug|Any CPU = ExportDebug|Any CPU
+	ExportRelease|Any CPU = ExportRelease|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFBB0986-C546-45CC-BB4C-E903923349AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFBB0986-C546-45CC-BB4C-E903923349AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFBB0986-C546-45CC-BB4C-E903923349AF}.ExportDebug|Any CPU.ActiveCfg = ExportDebug|Any CPU
+		{BFBB0986-C546-45CC-BB4C-E903923349AF}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
+		{BFBB0986-C546-45CC-BB4C-E903923349AF}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
+		{BFBB0986-C546-45CC-BB4C-E903923349AF}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+	EndGlobalSection
+EndGlobal

@@ -49,7 +49,7 @@ func Respawn():
 		var t = spawner.spawn(data)
 		if t is Tank:
 			t.spawner = spawner
-			t.SetUp(multiplayer.get_unique_id())
+			#t.SetUp(multiplayer.get_unique_id())
 	
 func TankDied(tank : Tank):
 	DropUpgrade(tank)
@@ -132,11 +132,13 @@ func DowngradeTank(up : Upgrade, p : Tank):
 
 func SpawnObj(data : Dictionary) -> Node:
 	var obj : Node = load(data["spawn"]).instantiate()
-	if data.has("id"):
-		obj.set_multiplayer_authority(data["id"].to_int())
+	#if data.has("id"):
+		#obj.set_multiplayer_authority(data["id"].to_int())
 	if obj is Node3D:
-		obj.position = data["position"]
-		obj.rotation.y = data["rotation"]
+		if data.has("position"):
+			obj.position = data["position"]
+		if data.has("rotation"):
+			obj.rotation.y = data["rotation"]
 		if data.has("scale"):
 			obj.scale = data["scale"]
 	if obj is Bullet:
@@ -151,32 +153,36 @@ func SpawnObj(data : Dictionary) -> Node:
 		for stat in changingStats:
 			if stat in obj:
 				obj.set(stat, obj.parentTank.get(stat))
-			
-		
-		for stat in obj.get_property_list():
-			if stat["name"].to_upper() in changingStats:
-				obj.set(stat["name"].to_upper(), obj.parentTank.get(stat["name"].to_upper()))
+		#for stat in obj.get_property_list():
+			#if stat["name"].to_upper() in changingStats:
+				#obj.set(stat["name"].to_upper(), obj.parentTank.get(stat["name"].to_upper()))
 		obj.connect("Died", obj.parentTank.BulletFreed)
 	if obj is Tank:
 		obj.position = Level.MainLevel.GetRandomCoordinate()
-		if obj is Tank:
-			obj.scale *= obj.PLAYERSIZE
-			obj.spawner = spawner
-			obj.connect("Died",TankDied)
-			myTanks.append(obj)
-			obj.container = self
-			DoAllUpgrades(obj)
-			obj.rotation.y = randf_range(-PI,PI)
-			obj.SetUp(data["id"].to_int())
+		obj.scale *= obj.PLAYERSIZE
+		obj.spawner = spawner
+		obj.connect("Died",TankDied)
+		myTanks.append(obj)
+		obj.container = self
+		DoAllUpgrades(obj)
+		obj.rotation.y = randf_range(-PI,PI)
+		obj.SetUp(data["id"].to_int())
+	if obj is LandMine:
+		var string : String = data["parentTank"]
+		var tank = get_node(string)
+		obj.connect("Died", tank.MineFreed)
+		obj.spawner = spawner
+		
+		var changingStats : Array = Upgrade.StatChange.keys()
+		changingStats = changingStats.map(func(x):return x.to_upper())
+		for stat in changingStats:
+			if stat in obj and stat in tank:
+				obj.set(stat, tank.get(stat))
 	return obj
 
 func Disconnect():
-	if myTanks.size() > 0:
-		for i in Upgrades.size():
-			DropUpgrade(myTanks.pick_random())
-	else:
-		for i in Upgrades.size():
-			DropUpgradeHere(Level.MainLevel.GetRandomCoordinate() + Vector3.UP * 3)
+	for i in Upgrades.size():
+		DropUpgradeHere(Level.MainLevel.GetRandomCoordinate() + Vector3.UP * 3)
 	queue_free()
 
 @rpc("any_peer","call_local","reliable")

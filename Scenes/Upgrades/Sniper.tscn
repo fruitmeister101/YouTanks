@@ -27,10 +27,11 @@ outline_color = Color(0, 0, 0, 1)
 [sub_resource type="CylinderMesh" id="CylinderMesh_4qfi5"]
 
 [node name="Sniper" type="RigidBody3D" unique_id=1827872960 node_paths=PackedStringArray("label")]
-mass = 0.1
 can_sleep = false
 script = ExtResource("1_jxxow")
 label = NodePath("Label")
+
+[node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=1354345191]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1465856074]
 replication_config = SubResource("SceneReplicationConfig_rxtrn")
@@ -57,8 +58,21 @@ Mod = 7
 ModHow = 3
 ModAmount = 1.0
 
+[node name="Up2" type="Node" parent="." unique_id=1668629684]
+script = ExtResource("3_w12mf")
+Mod = 12
+ModHow = 3
+ModAmount = 30.0
+
 [node name="Up3" type="Node" parent="." unique_id=654879294]
 script = ExtResource("3_w12mf")
 Mod = 11
 ModHow = 2
 ModAmount = 15.0
+
+[node name="Up4" type="Node" parent="." unique_id=1036607148]
+script = ExtResource("3_w12mf")
+Mod = 17
+ModHow = 3
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Destory"]

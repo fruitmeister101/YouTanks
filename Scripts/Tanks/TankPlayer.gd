@@ -28,6 +28,8 @@ func HandleInputs():
 		intercept = targetPlane.intersects_ray(point, mainCam.project_ray_normal(InputMousePos))
 		if Input.is_action_pressed("Shoot"):
 			Shoot()
+		if Input.is_action_just_pressed("LayMine"):
+			LayMine()
 
 func HandleTargeting(_delta: float = 0) -> void:
 	if intercept:

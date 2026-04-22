@@ -33,7 +33,8 @@ func SpawnRandomUpgrade():
 
 @rpc("any_peer","call_local")
 func DoSpawn(data):
-	GM.gm.ObjectSpawner.spawn(data)
+	if is_multiplayer_authority():
+		GM.gm.ObjectSpawner.spawn(data)
 	
 
 func load_all_resources(path: String) -> Array[Resource]:

@@ -27,6 +27,16 @@ enum StatChange{
 	BulletSize,
 	BulletBounceOffEnemy,
 	BulletLifetime,
+	
+	BulletTron,
+	BulletTrailLength,
+	
+	MineExplosionRadius,
+	MineExplosionDamage,
+	MineExplosionTimer,
+	MineSize,
+	MaxMinesOut,
+	
 }
 
 enum HowToApply{

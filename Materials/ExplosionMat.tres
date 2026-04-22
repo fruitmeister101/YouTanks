@@ -1,0 +1,7 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://kqlxsnl4qo22"]
+
+[ext_resource type="Shader" uid="uid://c62cdlxakjaep" path="res://Materials/Explosion.tres" id="1_41mnw"]
+
+[resource]
+render_priority = 0
+shader = ExtResource("1_41mnw")

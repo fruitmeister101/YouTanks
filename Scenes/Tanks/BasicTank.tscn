@@ -41,9 +41,6 @@ properties/2/replication_mode = 2
 properties/3/path = NodePath("MainBody/Node3D/TurretRotator:rotation")
 properties/3/spawn = true
 properties/3/replication_mode = 1
-properties/4/path = NodePath("MainBody/Node3D/TurretRotator/Barrel/FiringPoint/LineRenderer3D:points")
-properties/4/spawn = true
-properties/4/replication_mode = 1
 
 [node name="BasicTank" type="CharacterBody3D" unique_id=1118232497 node_paths=PackedStringArray("FiringPoint", "TrackPlacers", "BarrelAiming", "line")]
 slide_on_ceiling = false
@@ -108,6 +105,7 @@ mesh = SubResource("ImmediateMesh_ug1t7")
 script = ExtResource("7_0a8ah")
 points = Array[Vector3]([Vector3(0, 0, 0), Vector3(0, 0, 5)])
 end_thickness = 0.05
+use_global_coords = false
 metadata/_custom_type_script = "uid://bmvqnow50f2q8"
 
 [node name="Port" type="Node3D" parent="MainBody/Node3D" unique_id=1132775586]

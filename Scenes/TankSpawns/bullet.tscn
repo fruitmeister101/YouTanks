@@ -1,15 +1,13 @@
 [gd_scene format=3 uid="uid://d18aylqansqdx"]
 
 [ext_resource type="Script" uid="uid://c057ot2xslgac" path="res://Scripts/Bullet.gd" id="1_hct83"]
-[ext_resource type="Material" uid="uid://8ynalyhfyhbm" path="res://Materials/LineMaterial.tres" id="2_ulcdk"]
-[ext_resource type="Script" uid="uid://bmvqnow50f2q8" path="res://addons/LineRenderer/line_renderer.gd" id="3_ulcdk"]
-[ext_resource type="Script" uid="uid://djbx44ypv1gbg" path="res://Scripts/Trail.gd" id="4_gcbys"]
+[ext_resource type="Script" uid="uid://brqh6t5d1dyrl" path="res://addons/TrailRenderer/Runtime/GD/trail_renderer.gd" id="2_ulcdk"]
+[ext_resource type="Material" uid="uid://8ynalyhfyhbm" path="res://Materials/LineMaterial.tres" id="3_gcbys"]
+[ext_resource type="Script" uid="uid://sgikc3j1jri" path="res://Scripts/Tronizer.gd" id="4_gcbys"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oduel"]
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_ycag2"]
-
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_gcbys"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gcbys"]
 margin = 0.45
@@ -30,17 +28,24 @@ properties/3/path = NodePath(".:velocity")
 properties/3/spawn = true
 properties/3/replication_mode = 2
 
-[node name="Bullet" type="CharacterBody3D" unique_id=40436193 node_paths=PackedStringArray("trail", "cast", "sync")]
+[sub_resource type="Curve" id="Curve_dnqyx"]
+_limits = [0.0, 0.1, 0.0, 1.0]
+_data = [Vector2(0, 0.04), 0.0, 0.0, 0, 1, Vector2(1, 0.04), 0.0, 0.0, 1, 0]
+point_count = 2
+
+[node name="Bullet" type="CharacterBody3D" unique_id=40436193 node_paths=PackedStringArray("trail", "cast", "sync", "trailTron")]
 collision_layer = 2
+collision_mask = 5
 axis_lock_linear_y = true
 axis_lock_angular_x = true
 axis_lock_angular_y = true
 axis_lock_angular_z = true
 script = ExtResource("1_hct83")
-trail = NodePath("LineRenderer3D")
+trail = NodePath("TrailRenderer")
 trailLen = 60
 cast = NodePath("ShapeCast")
 sync = NodePath("MultiplayerSynchronizer")
+trailTron = NodePath("TrailRenderer/StaticBody3D/Tronizer")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1691960709]
 transform = Transform3D(0.25, 0, 0, 0, -1.0927847e-08, -0.25, 0, 0.25, -1.0927847e-08, 0, 0, 0)
@@ -54,25 +59,12 @@ mesh = SubResource("CapsuleMesh_ycag2")
 [node name="VisibleOnScreenEnabler3D" type="VisibleOnScreenEnabler3D" parent="." unique_id=1476215299]
 aabb = AABB(-0.1577665, -0.1863756, -0.2621614, 0.315533, 0.3727512, 0.5243228)
 
-[node name="LineRenderer3D" type="MeshInstance3D" parent="." unique_id=961576495]
-physics_interpolation_mode = 2
-material_override = ExtResource("2_ulcdk")
-mesh = SubResource("ImmediateMesh_gcbys")
-script = ExtResource("3_ulcdk")
-points = Array[Vector3]([])
-start_thickness = 0.05
-end_thickness = 0.0
-metadata/_custom_type_script = "uid://bmvqnow50f2q8"
-
-[node name="Logic" type="Node3D" parent="LineRenderer3D" unique_id=2052956112 node_paths=PackedStringArray("line")]
-script = ExtResource("4_gcbys")
-line = NodePath("..")
-
 [node name="ShapeCast" type="ShapeCast3D" parent="." unique_id=1061290007]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_gcbys")
 target_position = Vector3(0, 0.2, 0)
 max_results = 1
+collision_mask = 5
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=883021614]
 replication_config = SubResource("SceneReplicationConfig_3ld5y")
@@ -82,6 +74,29 @@ replication_config = SubResource("SceneReplicationConfig_3ld5y")
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="Area3D" unique_id=2014795731]
 transform = Transform3D(0.25, 0, 0, 0, -1.0927847e-08, -0.25, 0, 0.25, -1.0927847e-08, 0, 0, 0)
 shape = SubResource("CapsuleShape3D_oduel")
+
+[node name="TrailRenderer" type="Node3D" parent="." unique_id=651854745]
+process_thread_group = 2
+process_thread_group_order = 0
+process_thread_messages = 2
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, 0, 0)
+script = ExtResource("2_ulcdk")
+lifetime = 5.0
+min_vertex_distance = 0.05
+curve = SubResource("Curve_dnqyx")
+alignment = 2
+material = ExtResource("3_gcbys")
+cast_shadows = 1
+metadata/_custom_type_script = "uid://brqh6t5d1dyrl"
+
+[node name="StaticBody3D" type="StaticBody3D" parent="TrailRenderer" unique_id=451900968]
+transform = Transform3D(-4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0, 1, 0, 0, -0.26)
+collision_mask = 0
+
+[node name="Tronizer" type="CollisionShape3D" parent="TrailRenderer/StaticBody3D" unique_id=2118695141 node_paths=PackedStringArray("b", "trail")]
+script = ExtResource("4_gcbys")
+b = NodePath("../../..")
+trail = NodePath("../..")
 
 [connection signal="screen_exited" from="VisibleOnScreenEnabler3D" to="." method="Destroy"]
 [connection signal="area_entered" from="Area3D" to="." method="HitArea"]

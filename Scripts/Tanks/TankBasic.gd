@@ -11,16 +11,19 @@ func _enter_tree() -> void:
 	pass
 
 func _physics_process(delta: float) -> void:
-	if not multiplayer.is_server(): return
+	#if not is_multiplayer_authority(): return
 	if GM.gm.ActivePlayers.size() > 0:
 		var pl : Array[TankContainer] = GM.gm.ActivePlayers
 		var players : Array[Tank] = []
 		for p in pl:
 			players.append_array(p.myTanks)
+		players.filter(func(x): return x)
 		players.sort_custom(func(x, _y)->float:return (global_position - x.global_position).length_squared())
+		players = players.filter(func(x):return x if x else null)
 		if players.size() > 0:
 			Target = players[0]
-		#set_multiplayer_authority(players[0].name.to_int())
+		if Target:
+			set_multiplayer_authority(Target.get_multiplayer_authority())
 	ShootCooldown -= delta
 	Move(delta)
 	move_and_slide()
@@ -58,7 +61,7 @@ func HandleShooting(_delta: float = 0) -> void:
 				break
 		else:
 			break
-	line.points = points
+	#line = points
 
 func Shoot() -> void :
 
@@ -68,7 +71,9 @@ func Move(_delta: float = 0) ->void:
 	
 	if (lastTrackPlaced - global_position).length() >= trackDist:
 		PlaceTrack(_delta)
-	rotation.y = rotation.y + (TURNSPEED * _delta / TAU)
+	velocity += get_gravity() * _delta
+	angularVelocity = move_toward(angularVelocity, TURNSPEED / TAU * _delta, FRICTION * 0.125 * 0.125)
+	rotate_y(angularVelocity)
 	randAngleTimer -= _delta
 	if randAngleTimer <= 0:
 		PickRandomTimer(1,3)

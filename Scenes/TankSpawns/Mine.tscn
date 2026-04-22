@@ -1,0 +1,96 @@
+[gd_scene format=3 uid="uid://c4c2fub2qdkd0"]
+
+[ext_resource type="Script" uid="uid://dmrtpaf1iuhaw" path="res://Scripts/mine.gd" id="1_mey5n"]
+[ext_resource type="Material" uid="uid://t6vd13gwufgk" path="res://Materials/GlowyMat.tres" id="2_mey5n"]
+[ext_resource type="PackedScene" uid="uid://ds4ifwlgii1u3" path="res://Scenes/TankSpawns/Explosion.tscn" id="2_mxhf6"]
+[ext_resource type="Material" uid="uid://b34r42676vic" path="res://Materials/Tank2.tres" id="3_xqwqb"]
+[ext_resource type="Material" uid="uid://daas1mtu2wvv8" path="res://Materials/IntersectionMat.tres" id="5_xqwqb"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_rw1a4"]
+height = 0.099999964
+radius = 0.1
+
+[sub_resource type="SphereMesh" id="SphereMesh_yln1e"]
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_il3xu"]
+height = 7.5
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_mey5n"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_mxhf6"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_mey5n"]
+properties/0/path = NodePath(".:MINESIZE")
+properties/0/spawn = true
+properties/0/replication_mode = 0
+properties/1/path = NodePath(".:MINEEXPLOSIONRADIUS")
+properties/1/spawn = true
+properties/1/replication_mode = 0
+properties/2/path = NodePath(".:MINEEXPLOSIONDAMAGE")
+properties/2/spawn = true
+properties/2/replication_mode = 0
+properties/3/path = NodePath(".:MINEEXPLOSIONTIMER")
+properties/3/spawn = true
+properties/3/replication_mode = 0
+properties/4/path = NodePath(".:scale")
+properties/4/spawn = true
+properties/4/replication_mode = 0
+
+[node name="LandMine" type="RigidBody3D" unique_id=463996219 node_paths=PackedStringArray("overlapSphere", "glowyBit", "dangerZone")]
+collision_layer = 4
+collision_mask = 4
+center_of_mass_mode = 1
+can_sleep = false
+script = ExtResource("1_mey5n")
+overlapSphere = NodePath("ExplosionArea")
+glowyBit = NodePath("GlowyBit")
+dangerZone = NodePath("ExplosionArea/RadiusIndicator")
+Explosion = ExtResource("2_mxhf6")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=777594657]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.049999952, 0)
+shape = SubResource("CylinderShape3D_rw1a4")
+
+[node name="MainBody" type="MeshInstance3D" parent="." unique_id=711230761]
+transform = Transform3D(1.5, 0, 0, 0, 0.3, 0, 0, 0, 1.5, 0, 0, 0)
+material_override = ExtResource("3_xqwqb")
+mesh = SubResource("SphereMesh_yln1e")
+
+[node name="GlowyBit" type="MeshInstance3D" parent="." unique_id=368988187]
+transform = Transform3D(1, 0, 0, 0, 0.4, 0, 0, 0, 1, 0, 0, 0)
+material_override = ExtResource("2_mey5n")
+instance_shader_parameters/Color = Color(1, 0, 0, 1)
+mesh = SubResource("SphereMesh_yln1e")
+
+[node name="CollisionArea" type="Area3D" parent="." unique_id=1663824168]
+collision_layer = 0
+collision_mask = 7
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="CollisionArea" unique_id=1953626805]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 3.75, 0)
+shape = SubResource("CylinderShape3D_il3xu")
+
+[node name="ExplosionArea" type="Area3D" parent="." unique_id=1208396938]
+transform = Transform3D(15, 0, 0, 0, 15, 0, 0, 0, 15, 0, 0, 0)
+collision_layer = 4
+collision_mask = 7
+monitorable = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExplosionArea" unique_id=246934756]
+shape = SubResource("SphereShape3D_mey5n")
+
+[node name="RadiusIndicator" type="MeshInstance3D" parent="ExplosionArea" unique_id=1519415334]
+transform = Transform3D(0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0)
+material_override = ExtResource("5_xqwqb")
+instance_shader_parameters/Color = Color(1, 0, 0, 1)
+instance_shader_parameters/Opacity = -0.5
+instance_shader_parameters/Thickness = 0.0
+mesh = SubResource("SphereMesh_mxhf6")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1674119307]
+replication_config = SubResource("SceneReplicationConfig_mey5n")
+
+[node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=375226586]
+
+[connection signal="body_entered" from="CollisionArea" to="." method="Trigger"]
+[connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Explode"]

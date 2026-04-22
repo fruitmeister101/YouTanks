@@ -27,10 +27,11 @@ outline_color = Color(0, 0, 0, 1)
 [sub_resource type="CylinderMesh" id="CylinderMesh_4qfi5"]
 
 [node name="Big" type="RigidBody3D" unique_id=1827872960 node_paths=PackedStringArray("label")]
-mass = 0.1
 can_sleep = false
 script = ExtResource("1_de6o8")
 label = NodePath("Label")
+
+[node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=202657816]
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1465856074]
 replication_config = SubResource("SceneReplicationConfig_rxtrn")
@@ -54,23 +55,25 @@ mesh = SubResource("CylinderMesh_4qfi5")
 [node name="Up" type="Node" parent="." unique_id=845242669]
 script = ExtResource("3_jolss")
 Mod = 8
-ModHow = 2
-ModAmount = 1.0
+ModHow = 1
+ModAmount = 1.25
 
 [node name="Up2" type="Node" parent="." unique_id=455922545]
 script = ExtResource("3_jolss")
-Mod = 17
-ModHow = 2
-ModAmount = 1.0
+Mod = 5
+ModHow = 1
+ModAmount = 1.25
 
 [node name="Up3" type="Node" parent="." unique_id=792224331]
 script = ExtResource("3_jolss")
 Mod = 4
 ModHow = 2
-ModAmount = 4.0
+ModAmount = 1.0
 
 [node name="Up4" type="Node" parent="." unique_id=14188259]
 script = ExtResource("3_jolss")
 Mod = 1
 ModHow = 1
-ModAmount = 2.0
+ModAmount = 1.25
+
+[connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Destory"]

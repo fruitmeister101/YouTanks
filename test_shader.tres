@@ -1,0 +1,301 @@
+[gd_resource type="VisualShader" format=3 uid="uid://duobgvux66845"]
+
+[sub_resource type="VisualShaderNodeMultiplyAdd" id="VisualShaderNodeMultiplyAdd_0y8r0"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(-1, 1), 2, Vector2(0, 0)]
+op_type = 1
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_0y8r0"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(1, 1)]
+op_type = 0
+operator = 4
+
+[sub_resource type="VisualShaderNodeVectorDistance" id="VisualShaderNodeVectorDistance_ayy1w"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0.5, 0.5)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeVectorCompose" id="VisualShaderNodeVectorCompose_bowvu"]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeClamp" id="VisualShaderNodeClamp_0y8r0"]
+
+[sub_resource type="VisualShaderNodeGlobalExpression" id="VisualShaderNodeGlobalExpression_0y8r0"]
+size = Vector2(440, 120)
+expression = "// https://en.wikipedia.org/wiki/Voronoi_diagram
+// https://en.wikipedia.org/wiki/Worley_noise"
+
+[sub_resource type="VisualShaderNodeVectorDistance" id="VisualShaderNodeVectorDistance_0y8r0"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0.5, 0.5)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeVectorCompose" id="VisualShaderNodeVectorCompose_ayy1w"]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeRandomRange" id="VisualShaderNodeRandomRange_bowvu"]
+
+[sub_resource type="VisualShaderNodeMultiplyAdd" id="VisualShaderNodeMultiplyAdd_22rcx"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(-1, 1), 2, Vector2(0, 0)]
+op_type = 1
+
+[sub_resource type="VisualShaderNodeRandomRange" id="VisualShaderNodeRandomRange_1mo5g"]
+
+[sub_resource type="VisualShaderNodeMultiplyAdd" id="VisualShaderNodeMultiplyAdd_q2jkt"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(1, 1), 2, Vector2(1, 0)]
+op_type = 1
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_gw6qf"]
+operator = 7
+
+[sub_resource type="VisualShaderNodeMultiplyAdd" id="VisualShaderNodeMultiplyAdd_edkur"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(1, 1), 2, Vector2(1, 0)]
+op_type = 1
+
+[sub_resource type="VisualShaderNodeMultiplyAdd" id="VisualShaderNodeMultiplyAdd_4aau3"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(1, 1), 2, Vector2(-1, 0)]
+op_type = 1
+
+[sub_resource type="VisualShaderNodeRandomRange" id="VisualShaderNodeRandomRange_rafts"]
+
+[sub_resource type="VisualShaderNodeMultiplyAdd" id="VisualShaderNodeMultiplyAdd_jk32s"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(-1, 1), 2, Vector2(0, 0)]
+op_type = 1
+
+[sub_resource type="VisualShaderNodeRandomRange" id="VisualShaderNodeRandomRange_3rc3o"]
+
+[sub_resource type="VisualShaderNodeVectorCompose" id="VisualShaderNodeVectorCompose_dfg6x"]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeMultiplyAdd" id="VisualShaderNodeMultiplyAdd_tkwbb"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(1, 1), 2, Vector2(-1, 0)]
+op_type = 1
+
+[sub_resource type="VisualShaderNodeVectorDistance" id="VisualShaderNodeVectorDistance_je2pg"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(0.5, 0.5)]
+op_type = 0
+
+[sub_resource type="VisualShaderNodeFloatOp" id="VisualShaderNodeFloatOp_xat17"]
+operator = 7
+
+[sub_resource type="VisualShaderNodeExpression" id="VisualShaderNodeExpression_0y8r0"]
+size = Vector2(520, 560)
+expression = "vec3 scaleUV = uvw * 10.0;
+if(!is3d) {
+	scaleUV = vec3(scaleUV.xy, 0.);
+}
+vec3 remainder = mod(scaleUV, 1.0);
+vec3 roundUV = floor(scaleUV);
+
+int expand = 2;
+float minFound = 1.;
+for(int x = -expand; x < expand*2; x++) {
+	for(int y = -expand; y < expand*2; y++) {
+		for(int z = (!is3d ? 0 : -expand); z < (!is3d ? 1 : expand*2); z++) {
+			vec3 offset = vec3(float(x), float(y), float(z));
+			vec3 testUV = floor(scaleUV + offset);
+		
+			vec3 distTarget = voronoi_noise_hash_noise_range(vec3(testUV)) + offset;
+			if (!is3d) {
+				distTarget = vec3(distTarget.xy, 0.);
+			}
+			float dist = distance(remainder, distTarget);
+			minFound = min(dist, minFound);
+		}
+	}
+}
+
+output = clamp(minFound, 0., 1.);"
+
+[sub_resource type="VisualShaderNodeGlobalExpression" id="VisualShaderNodeGlobalExpression_ayy1w"]
+size = Vector2(820, 180)
+expression = "vec3 voronoi_noise_hash_noise_range( vec3 p ) {
+	p *= mat3(vec3(127.1, 311.7, -53.7), vec3(269.5, 183.3, 77.1), vec3(-301.7, 27.3, 215.3));
+	return 2.0 * fract(fract(p)*4375.55) -1.;
+}"
+
+[sub_resource type="VisualShaderNodeBooleanConstant" id="VisualShaderNodeBooleanConstant_0y8r0"]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_bowvu"]
+output_port_for_preview = 0
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeVectorFunc" id="VisualShaderNodeVectorFunc_0y8r0"]
+output_port_for_preview = 0
+default_input_values = [0, Vector2(0, 0)]
+expanded_output_ports = [0]
+op_type = 0
+function = 17
+
+[sub_resource type="VisualShaderNodeRandomRange" id="VisualShaderNodeRandomRange_0y8r0"]
+
+[sub_resource type="VisualShaderNodeVectorOp" id="VisualShaderNodeVectorOp_ayy1w"]
+default_input_values = [0, Vector2(0, 0), 1, Vector2(10, 10)]
+op_type = 0
+operator = 2
+
+[sub_resource type="VisualShaderNodeRandomRange" id="VisualShaderNodeRandomRange_ayy1w"]
+
+[resource]
+code = "shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_lambert, specular_schlick_ggx;
+
+
+
+// GlobalExpression:0
+	// https://en.wikipedia.org/wiki/Voronoi_diagram
+	// https://en.wikipedia.org/wiki/Worley_noise
+// GlobalExpression:1
+	vec3 voronoi_noise_hash_noise_range( vec3 p ) {
+		p *= mat3(vec3(127.1, 311.7, -53.7), vec3(269.5, 183.3, 77.1), vec3(-301.7, 27.3, 215.3));
+		return 2.0 * fract(fract(p)*4375.55) -1.;
+	}
+
+void fragment() {
+// Input:5
+	vec2 n_out5p0 = UV;
+
+
+// BooleanConstant:34
+	bool n_out34p0 = false;
+
+
+	float n_out32p0;
+// Expression:32
+	n_out32p0 = 0.0;
+	{
+		vec3 scaleUV = vec3(n_out5p0, 0.0) * 10.0;
+		if(!n_out34p0) {
+			scaleUV = vec3(scaleUV.xy, 0.);
+		}
+		vec3 remainder = mod(scaleUV, 1.0);
+		vec3 roundUV = floor(scaleUV);
+		
+		int expand = 2;
+		float minFound = 1.;
+		for(int x = -expand; x < expand*2; x++) {
+			for(int y = -expand; y < expand*2; y++) {
+				for(int z = (!n_out34p0 ? 0 : -expand); z < (!n_out34p0 ? 1 : expand*2); z++) {
+					vec3 offset = vec3(float(x), float(y), float(z));
+					vec3 testUV = floor(scaleUV + offset);
+				
+					vec3 distTarget = voronoi_noise_hash_noise_range(vec3(testUV)) + offset;
+					if (!n_out34p0) {
+						distTarget = vec3(distTarget.xy, 0.);
+					}
+					float dist = distance(remainder, distTarget);
+					minFound = min(dist, minFound);
+				}
+			}
+		}
+		
+		n_out32p0 = clamp(minFound, 0., 1.);
+	}
+
+
+// Output:0
+	ALBEDO = vec3(n_out32p0);
+
+
+}
+"
+nodes/fragment/0/position = Vector2(1800, 580)
+nodes/fragment/5/node = SubResource("VisualShaderNodeInput_bowvu")
+nodes/fragment/5/position = Vector2(-1360, 680)
+nodes/fragment/6/node = SubResource("VisualShaderNodeVectorFunc_0y8r0")
+nodes/fragment/6/position = Vector2(-860, 680)
+nodes/fragment/7/node = SubResource("VisualShaderNodeRandomRange_0y8r0")
+nodes/fragment/7/position = Vector2(-640, 680)
+nodes/fragment/8/node = SubResource("VisualShaderNodeVectorOp_ayy1w")
+nodes/fragment/8/position = Vector2(-1060, 680)
+nodes/fragment/9/node = SubResource("VisualShaderNodeRandomRange_ayy1w")
+nodes/fragment/9/position = Vector2(-460, 860)
+nodes/fragment/10/node = SubResource("VisualShaderNodeMultiplyAdd_0y8r0")
+nodes/fragment/10/position = Vector2(-640, 860)
+nodes/fragment/11/node = SubResource("VisualShaderNodeVectorOp_0y8r0")
+nodes/fragment/11/position = Vector2(-860, 1080)
+nodes/fragment/12/node = SubResource("VisualShaderNodeVectorDistance_ayy1w")
+nodes/fragment/12/position = Vector2(20, 860)
+nodes/fragment/13/node = SubResource("VisualShaderNodeVectorCompose_bowvu")
+nodes/fragment/13/position = Vector2(-280, 720)
+nodes/fragment/14/node = SubResource("VisualShaderNodeClamp_0y8r0")
+nodes/fragment/14/position = Vector2(760, 800)
+nodes/fragment/15/node = SubResource("VisualShaderNodeGlobalExpression_0y8r0")
+nodes/fragment/15/position = Vector2(-620, 520)
+nodes/fragment/15/size = Vector2(440, 120)
+nodes/fragment/15/input_ports = ""
+nodes/fragment/15/output_ports = ""
+nodes/fragment/15/expression = "// https://en.wikipedia.org/wiki/Voronoi_diagram
+// https://en.wikipedia.org/wiki/Worley_noise"
+nodes/fragment/16/node = SubResource("VisualShaderNodeVectorDistance_0y8r0")
+nodes/fragment/16/position = Vector2(80, 1120)
+nodes/fragment/17/node = SubResource("VisualShaderNodeVectorCompose_ayy1w")
+nodes/fragment/17/position = Vector2(-240, 1380)
+nodes/fragment/18/node = SubResource("VisualShaderNodeRandomRange_bowvu")
+nodes/fragment/18/position = Vector2(-420, 1521.61)
+nodes/fragment/19/node = SubResource("VisualShaderNodeMultiplyAdd_22rcx")
+nodes/fragment/19/position = Vector2(-600, 1521.61)
+nodes/fragment/20/node = SubResource("VisualShaderNodeRandomRange_1mo5g")
+nodes/fragment/20/position = Vector2(-600, 1341.61)
+nodes/fragment/21/node = SubResource("VisualShaderNodeMultiplyAdd_q2jkt")
+nodes/fragment/21/position = Vector2(-840, 1381.61)
+nodes/fragment/22/node = SubResource("VisualShaderNodeFloatOp_gw6qf")
+nodes/fragment/22/position = Vector2(540, 780)
+nodes/fragment/23/node = SubResource("VisualShaderNodeMultiplyAdd_edkur")
+nodes/fragment/23/position = Vector2(-40, 1380)
+nodes/fragment/24/node = SubResource("VisualShaderNodeMultiplyAdd_4aau3")
+nodes/fragment/24/position = Vector2(-940, 1700)
+nodes/fragment/25/node = SubResource("VisualShaderNodeRandomRange_rafts")
+nodes/fragment/25/position = Vector2(-640, 1740)
+nodes/fragment/26/node = SubResource("VisualShaderNodeMultiplyAdd_jk32s")
+nodes/fragment/26/position = Vector2(-640, 1920)
+nodes/fragment/27/node = SubResource("VisualShaderNodeRandomRange_3rc3o")
+nodes/fragment/27/position = Vector2(-460, 1920)
+nodes/fragment/28/node = SubResource("VisualShaderNodeVectorCompose_dfg6x")
+nodes/fragment/28/position = Vector2(-280, 1780)
+nodes/fragment/29/node = SubResource("VisualShaderNodeMultiplyAdd_tkwbb")
+nodes/fragment/29/position = Vector2(-80, 1780)
+nodes/fragment/30/node = SubResource("VisualShaderNodeVectorDistance_je2pg")
+nodes/fragment/30/position = Vector2(200, 1620)
+nodes/fragment/31/node = SubResource("VisualShaderNodeFloatOp_xat17")
+nodes/fragment/31/position = Vector2(820, 1060)
+nodes/fragment/32/node = SubResource("VisualShaderNodeExpression_0y8r0")
+nodes/fragment/32/position = Vector2(1200, 520)
+nodes/fragment/32/size = Vector2(520, 560)
+nodes/fragment/32/input_ports = "0,4,uvw;1,6,is3d;"
+nodes/fragment/32/output_ports = "0,0,output;"
+nodes/fragment/32/expression = "vec3 scaleUV = uvw * 10.0;
+if(!is3d) {
+	scaleUV = vec3(scaleUV.xy, 0.);
+}
+vec3 remainder = mod(scaleUV, 1.0);
+vec3 roundUV = floor(scaleUV);
+
+int expand = 2;
+float minFound = 1.;
+for(int x = -expand; x < expand*2; x++) {
+	for(int y = -expand; y < expand*2; y++) {
+		for(int z = (!is3d ? 0 : -expand); z < (!is3d ? 1 : expand*2); z++) {
+			vec3 offset = vec3(float(x), float(y), float(z));
+			vec3 testUV = floor(scaleUV + offset);
+		
+			vec3 distTarget = voronoi_noise_hash_noise_range(vec3(testUV)) + offset;
+			if (!is3d) {
+				distTarget = vec3(distTarget.xy, 0.);
+			}
+			float dist = distance(remainder, distTarget);
+			minFound = min(dist, minFound);
+		}
+	}
+}
+
+output = clamp(minFound, 0., 1.);"
+nodes/fragment/33/node = SubResource("VisualShaderNodeGlobalExpression_ayy1w")
+nodes/fragment/33/position = Vector2(840, 320)
+nodes/fragment/33/size = Vector2(820, 180)
+nodes/fragment/33/input_ports = ""
+nodes/fragment/33/output_ports = ""
+nodes/fragment/33/expression = "vec3 voronoi_noise_hash_noise_range( vec3 p ) {
+	p *= mat3(vec3(127.1, 311.7, -53.7), vec3(269.5, 183.3, 77.1), vec3(-301.7, 27.3, 215.3));
+	return 2.0 * fract(fract(p)*4375.55) -1.;
+}"
+nodes/fragment/34/node = SubResource("VisualShaderNodeBooleanConstant_0y8r0")
+nodes/fragment/34/position = Vector2(1000, 660)
+nodes/fragment/connections = PackedInt32Array(5, 0, 8, 0, 8, 0, 6, 0, 6, 0, 7, 0, 10, 0, 9, 0, 6, 0, 10, 0, 8, 0, 11, 0, 11, 0, 12, 1, 7, 0, 13, 0, 9, 0, 13, 1, 13, 0, 12, 0, 19, 0, 18, 0, 20, 0, 17, 0, 18, 0, 17, 1, 21, 0, 20, 0, 21, 0, 19, 0, 6, 0, 21, 0, 22, 0, 14, 0, 11, 0, 16, 1, 17, 0, 23, 0, 23, 0, 16, 0, 12, 0, 22, 0, 26, 0, 27, 0, 25, 0, 28, 0, 27, 0, 28, 1, 24, 0, 25, 0, 24, 0, 26, 0, 28, 0, 29, 0, 6, 0, 24, 0, 29, 0, 30, 1, 11, 0, 30, 0, 16, 0, 31, 0, 30, 0, 31, 1, 31, 0, 22, 1, 32, 0, 0, 0, 5, 0, 32, 0, 34, 0, 32, 1)
