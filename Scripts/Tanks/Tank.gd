@@ -33,10 +33,15 @@ class_name Tank extends CharacterBody3D
 @export var BULLETTRAILLENGTH : float = 1
 
 @export var MINEEXPLOSIONRADIUS : float = 15
-@export var MINEEXPLOSIONDAMAGE : float = 10
+@export var MINEEXPLOSIONDAMAGE : float = 2
 @export var MINEEXPLOSIONTIMER : float = 25
-@export var MINESIZE : float = 0.6
-@export var MAXMINESOUT : int = 2
+@export var MINESIZE : float = 0.6:
+	set(value):
+		MINESIZE = max(0.1, value)
+@export var MAXMINESOUT : int = 2:
+	set(value):
+		MAXMINESOUT = max(1, value)
+@export var MINEVELOCITY : float = 0
 
 @export_category("Dont Touch")
 @export var bullet : PackedScene
@@ -51,6 +56,9 @@ class_name Tank extends CharacterBody3D
 @export var line : LineRenderer
 @export var spawner : MultiplayerSpawner
 @export var targetingCursor : Node3D
+
+var mineCooldown : float = 0
+
 
 signal Died(tank : Tank)
 
@@ -85,7 +93,7 @@ func _ready() -> void:
 	mainView = get_viewport()
 	mainCam = mainView.get_camera_3d()
 
-func SetUp(id:int) -> void:
+func SetUp() -> void:
 	#rotation.y = basis.z.signed_angle_to(Vector3(), Vector3.UP)
 	show()
 	mainView = get_viewport()
@@ -101,7 +109,6 @@ func SetUp(id:int) -> void:
 					continue
 				sync.replication_config.add_property(stat)
 				sync.replication_config.property_set_replication_mode(stat,SceneReplicationConfig.REPLICATION_MODE_ON_CHANGE)
-	set_multiplayer_authority(id)
 
 
 func HandleTargeting(_delta: float = 0) -> void:
@@ -148,8 +155,10 @@ func LayMine():
 	if not is_multiplayer_authority():
 		return
 	if landMinesOut < MAXMINESOUT:
-		MakeMine()
-		landMinesOut += 1
+		if mineCooldown <= 0:
+			mineCooldown = BULLETCOOLDOWN * MINESIZE * 2
+			landMinesOut += 1
+			return MakeMine()
 
 func MakeBullet(offset : Vector3 = Vector3.ZERO, Spread : float = 0):
 	var data = {
@@ -159,7 +168,7 @@ func MakeBullet(offset : Vector3 = Vector3.ZERO, Spread : float = 0):
 		"id" : str(multiplayer.get_unique_id()),
 		"parentTank" : name,
 	}
-	spawner.spawn(data)
+	return spawner.spawn(data)
 
 func MakeMine():
 	var data = {
@@ -167,8 +176,9 @@ func MakeMine():
 		"position" : global_position,
 		"id" : str(multiplayer.get_unique_id()),
 		"parentTank" : name,
+		"velocity" : MINEVELOCITY
 	}
-	spawner.spawn(data)
+	return spawner.spawn(data)
 
 
 
@@ -206,5 +216,5 @@ func Destroy() -> void:
 func BulletFreed() -> void:
 	bulletsOut -= 1
 
-func MineFreed() -> void:
+func MineFreed(mine : LandMine) -> void:
 	landMinesOut -= 1

@@ -103,6 +103,8 @@ projection = 1
 current = true
 size = 25.0
 
+[node name="RoundManager" type="Node" parent="." unique_id=1683177581]
+
 [connection signal="pressed" from="InGameUI/PauseButton" to="." method="Pause"]
 [connection signal="pressed" from="InGameUI/ExitButton" to="." method="ExitToMenu"]
 [connection signal="pressed" from="HostJoin UI/HostButton" to="." method="HostPressed"]

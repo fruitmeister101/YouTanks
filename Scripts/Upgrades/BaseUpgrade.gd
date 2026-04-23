@@ -36,6 +36,7 @@ enum StatChange{
 	MineExplosionTimer,
 	MineSize,
 	MaxMinesOut,
+	MineVelocity
 	
 }
 

@@ -4,11 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://d18aylqansqdx" path="res://Scenes/TankSpawns/bullet.tscn" id="2_e15qe"]
 [ext_resource type="PackedScene" uid="uid://c4c2fub2qdkd0" path="res://Scenes/TankSpawns/Mine.tscn" id="3_e15qe"]
 [ext_resource type="PackedScene" uid="uid://dltqymjoy41dg" path="res://Scenes/TankSpawns/track.tscn" id="3_sc27p"]
-[ext_resource type="Material" uid="uid://dpg8md3fwcsva" path="res://Materials/Tank1.tres" id="4_u2ngt"]
-[ext_resource type="Material" uid="uid://ujgvap48e85n" path="res://Materials/Tank3.tres" id="5_xs5u8"]
+[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/OverRideableMat.tres" id="5_aweo3"]
 [ext_resource type="Material" uid="uid://8ynalyhfyhbm" path="res://Materials/LineMaterial.tres" id="6_apjm4"]
 [ext_resource type="Script" uid="uid://bmvqnow50f2q8" path="res://addons/LineRenderer/line_renderer.gd" id="7_bscpi"]
-[ext_resource type="Material" uid="uid://b34r42676vic" path="res://Materials/Tank2.tres" id="8_ncjgn"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_tsiek"]
 properties/0/path = NodePath(".:position")
@@ -41,7 +39,7 @@ top_radius = 0.1
 bottom_radius = 0.1
 height = 1.0
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_e15qe"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_aweo3"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_tsiek"]
 _surfaces = [{
@@ -57,12 +55,12 @@ _surfaces = [{
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_4rnvw"]
 height = 1.465
 
-[node name="tankPlayer" type="CharacterBody3D" unique_id=1118232497 node_paths=PackedStringArray("FiringPoint", "TrackPlacers", "BarrelAiming", "line", "targetingCursor", "sync")]
+[node name="tankPlayer" type="CharacterBody3D" unique_id=1118232497 node_paths=PackedStringArray("UI", "FiringPoint", "TrackPlacers", "BarrelAiming", "line", "targetingCursor", "sync")]
 physics_interpolation_mode = 1
-collision_mask = 7
 input_ray_pickable = false
 slide_on_ceiling = false
 script = ExtResource("1_rgc5o")
+UI = NodePath("Label")
 MOVESPEED = 3.0
 TURNSPEED = 20.0
 BARRELAIMSPEED = 5.0
@@ -89,8 +87,8 @@ shape = SubResource("CylinderShape3D_0j3ql")
 
 [node name="MainBody" type="MeshInstance3D" parent="." unique_id=918243672]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
-layers = 2
-material_override = ExtResource("4_u2ngt")
+material_override = ExtResource("5_aweo3")
+instance_shader_parameters/Color = Color(0, 0, 1, 1)
 mesh = SubResource("SphereMesh_snc5l")
 
 [node name="Node3D" type="Node3D" parent="MainBody" unique_id=200739204]
@@ -99,7 +97,8 @@ transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0,
 [node name="WheelRight" type="MeshInstance3D" parent="MainBody/Node3D" unique_id=1489161204]
 transform = Transform3D(0.65000004, 0, 0, 0, -2.8412403e-08, -0.65000004, 0, 0.65000004, -2.8412403e-08, 0.5500001, -0.52500004, 0)
 layers = 2
-material_override = ExtResource("4_u2ngt")
+material_override = ExtResource("5_aweo3")
+instance_shader_parameters/Color = Color(0, 1, 0.4745098, 1)
 mesh = SubResource("CapsuleMesh_fbtf3")
 
 [node name="Track Placer" type="Node3D" parent="MainBody/Node3D/WheelRight" unique_id=190624727]
@@ -108,7 +107,8 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2
 [node name="WheelLeft" type="MeshInstance3D" parent="MainBody/Node3D" unique_id=523256645]
 transform = Transform3D(0.65000004, 0, 0, 0, -2.8412403e-08, -0.65000004, 0, 0.65000004, -2.8412403e-08, -0.5500001, -0.52500004, 0)
 layers = 2
-material_override = ExtResource("4_u2ngt")
+material_override = ExtResource("5_aweo3")
+instance_shader_parameters/Color = Color(0, 1, 0.4745098, 1)
 mesh = SubResource("CapsuleMesh_elvtb")
 
 [node name="Track Placer" type="Node3D" parent="MainBody/Node3D/WheelLeft" unique_id=1631883076]
@@ -121,7 +121,8 @@ transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, 0,
 [node name="Barrel" type="MeshInstance3D" parent="MainBody/Node3D/TurretRotator" unique_id=133830805]
 transform = Transform3D(-0.65, 5.6824803e-08, 0, 2.483891e-15, 2.8412401e-08, -0.65, -5.6824803e-08, -0.65, -2.8412401e-08, 0, 0, -0.6)
 layers = 2
-material_override = ExtResource("5_xs5u8")
+material_override = ExtResource("5_aweo3")
+instance_shader_parameters/Color = Color(0, 0.60784316, 0, 1)
 mesh = SubResource("CylinderMesh_l8ytb")
 
 [node name="FiringPoint" type="Node3D" parent="MainBody/Node3D/TurretRotator/Barrel" unique_id=643449663]
@@ -130,7 +131,7 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0
 [node name="LineRenderer3D" type="MeshInstance3D" parent="MainBody/Node3D/TurretRotator/Barrel/FiringPoint" unique_id=237872926]
 material_override = ExtResource("6_apjm4")
 cast_shadow = 0
-mesh = SubResource("ImmediateMesh_e15qe")
+mesh = SubResource("ImmediateMesh_aweo3")
 script = ExtResource("7_bscpi")
 points = Array[Vector3]([Vector3(0, 0, 0), Vector3(0, 0, 5)])
 end_thickness = 0.0
@@ -149,5 +150,15 @@ transform = Transform3D(-1.0927847e-08, -0.5, 0, 0.25, -2.1855694e-08, 0, 0, 0, 
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="MainBody/Node3D/Port" unique_id=1492554417]
 layers = 2
-material_override = ExtResource("8_ncjgn")
+material_override = ExtResource("5_aweo3")
+instance_shader_parameters/Color = Color(0.0010121485, 0.000417689, 5.5407636e-05, 1)
 mesh = SubResource("CapsuleMesh_4rnvw")
+
+[node name="Label" type="Label" parent="." unique_id=229543208]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 40.0
+grow_vertical = 0
+horizontal_alignment = 2

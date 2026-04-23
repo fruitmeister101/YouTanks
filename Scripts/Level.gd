@@ -2,7 +2,7 @@ class_name Level extends Node
 
 static var MainLevel : Level
 
-@export var testTanks: Array
+@export var testTanks: Array[PackedScene]
 @export var testUpgrades: Array
 
 func _enter_tree() -> void:

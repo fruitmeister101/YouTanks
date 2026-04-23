@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://pbgjl647j1q3"]
+
+[ext_resource type="Script" uid="uid://bawwruaigopyk" path="res://Scripts/PowerUpBanner.gd" id="1_l1uqo"]
+
+[node name="PowerUpBanner" type="Label" unique_id=179398877]
+text = "You Shouldn't See This Text
+"
+script = ExtResource("1_l1uqo")
+Lifetime = 2.0
+Speed = 0.25

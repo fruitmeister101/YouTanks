@@ -14,8 +14,8 @@ class_name Bullet extends CharacterBody3D
 		BULLETDAMAGE = max(value, 0.1)
 @export var BULLETSIZE : float = 1:
 	set(value):
-		var ratio = value / BULLETSIZE
-		scale *= ratio
+		value = max(value, 0.125)
+		scale *=  value / BULLETSIZE
 		BULLETSIZE = value
 @export var BULLETTRON : int = 0:
 	set(value):

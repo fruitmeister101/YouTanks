@@ -2,13 +2,13 @@ class_name BasicTank extends Tank
 
 @export var barrelSway : int = 1
 @export var sway : int = 1
-@export var randSwayTimer : float
+@export_range(0.5,10.0) var randPickTimer : float
 @export var randAngleTimer : float
+@export_range(1,100) var randShoot : int = 10
+@export var MineDetection : Area3D
 
-var Target
+var Target : Tank
 
-func _enter_tree() -> void:
-	pass
 
 func _physics_process(delta: float) -> void:
 	#if not is_multiplayer_authority(): return
@@ -22,16 +22,17 @@ func _physics_process(delta: float) -> void:
 		players = players.filter(func(x):return x if x else null)
 		if players.size() > 0:
 			Target = players[0]
-		if Target:
-			set_multiplayer_authority(Target.get_multiplayer_authority())
+		#if Target:
+			#set_multiplayer_authority(Target.get_multiplayer_authority())
 	ShootCooldown -= delta
+	mineCooldown -= delta
 	Move(delta)
 	move_and_slide()
 	HandleTargeting(delta)
 	HandleShooting(delta)
 
-func SetUp(id:int) -> void:
-	super.SetUp(id)
+func SetUp() -> void:
+	super.SetUp()
 	sway = randi_range(0,1) * 2 - 1
 	barrelSway = randi_range(0,1) * 2 - 1
 
@@ -56,7 +57,7 @@ func HandleShooting(_delta: float = 0) -> void:
 			dir = dir.bounce(hit.normal)
 			if hit.collider is Tank or hit.collider is UpgradeObject:
 				if hit.collider is PlayerTank or hit.collider is UpgradeObject:
-					if randi_range(0,9) == 0:
+					if randi_range(0,randShoot) == 0:
 						Shoot()
 				break
 		else:
@@ -72,15 +73,25 @@ func Move(_delta: float = 0) ->void:
 	if (lastTrackPlaced - global_position).length() >= trackDist:
 		PlaceTrack(_delta)
 	velocity += get_gravity() * _delta
+	var CloseToMine : bool = false
+	var close : Node3D
+	for b in MineDetection.get_overlapping_bodies():
+		print(b.name)
+		if b is LandMine:
+			CloseToMine = true
+			close = b
+	if CloseToMine:
+		TURNSPEED = abs(TURNSPEED) * sign(BarrelAiming.basis.z.signed_angle_to(close.global_position - global_position,Vector3.UP))
+		pass
 	angularVelocity = move_toward(angularVelocity, TURNSPEED / TAU * _delta, FRICTION * 0.125 * 0.125)
 	rotate_y(angularVelocity)
 	randAngleTimer -= _delta
 	if randAngleTimer <= 0:
-		PickRandomTimer(1,3)
+		PickRandomTimer(0.5,randPickTimer)
 		PickRandomTurn()
 	move_and_slide()
 
-func PickRandomTimer(mn: int, mx: int):
+func PickRandomTimer(mn: float, mx: float):
 	randAngleTimer = GM.gm.GetRandomFloat(mn,mx)
 
 func PickRandomTurn():

@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://bbaxv4aoq8gwo"]
 
 [ext_resource type="Script" uid="uid://c51bdiuviq6gx" path="res://Scripts/Upgrades/UpgradeObject.gd" id="1_ff15g"]
-[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/Track.tres" id="2_www5n"]
+[ext_resource type="PackedScene" uid="uid://pbgjl647j1q3" path="res://Scenes/ObjectSpawns/PowerUpBanner.tscn" id="2_c3mdh"]
+[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/OverRideableMat.tres" id="2_www5n"]
 [ext_resource type="Script" uid="uid://dahavuogmwntv" path="res://Scripts/Upgrades/BaseUpgrade.gd" id="3_c3mdh"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rxtrn"]
@@ -30,6 +31,7 @@ outline_color = Color(0, 0, 0, 1)
 can_sleep = false
 script = ExtResource("1_ff15g")
 label = NodePath("Label")
+statUpBanner = ExtResource("2_c3mdh")
 
 [node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=2018559172]
 

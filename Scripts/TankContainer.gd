@@ -52,7 +52,7 @@ func Respawn():
 			#t.SetUp(multiplayer.get_unique_id())
 	
 func TankDied(tank : Tank):
-	DropUpgrade(tank)
+	#DropUpgrade(tank)
 	PublicEraseTank.rpc(tank.get_path())
 	#myTanks.erase(tank)
 
@@ -107,6 +107,8 @@ func UpgradeTank(up : Upgrade, p : Tank):
 		Upgrade.HowToApply.None:
 			pass
 	p.set(stat, value)
+	if p is PlayerTank:
+		p.UpdateUI()
 
 
 func DowngradeTank(up : Upgrade, p : Tank):
@@ -132,8 +134,8 @@ func DowngradeTank(up : Upgrade, p : Tank):
 
 func SpawnObj(data : Dictionary) -> Node:
 	var obj : Node = load(data["spawn"]).instantiate()
-	#if data.has("id"):
-		#obj.set_multiplayer_authority(data["id"].to_int())
+	if data.has("id"):
+		obj.set_multiplayer_authority(data["id"].to_int())
 	if obj is Node3D:
 		if data.has("position"):
 			obj.position = data["position"]
@@ -166,7 +168,7 @@ func SpawnObj(data : Dictionary) -> Node:
 		obj.container = self
 		DoAllUpgrades(obj)
 		obj.rotation.y = randf_range(-PI,PI)
-		obj.SetUp(data["id"].to_int())
+		obj.SetUp()
 	if obj is LandMine:
 		var string : String = data["parentTank"]
 		var tank = get_node(string)
@@ -178,11 +180,15 @@ func SpawnObj(data : Dictionary) -> Node:
 		for stat in changingStats:
 			if stat in obj and stat in tank:
 				obj.set(stat, tank.get(stat))
+		if data.has("velocity"):
+			if tank is Tank:
+				obj.StartVelocity = (-tank.BarrelAiming.global_basis.z * data["velocity"])
 	return obj
 
 func Disconnect():
-	for i in Upgrades.size():
-		DropUpgradeHere(Level.MainLevel.GetRandomCoordinate() + Vector3.UP * 3)
+	if not multiplayer.is_server():
+		for i in Upgrades.size():
+			DropUpgradeHere(Level.MainLevel.GetRandomCoordinate() + Vector3.UP * 3)
 	queue_free()
 
 @rpc("any_peer","call_local","reliable")

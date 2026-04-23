@@ -3,17 +3,18 @@
 [ext_resource type="Script" uid="uid://dmrtpaf1iuhaw" path="res://Scripts/mine.gd" id="1_mey5n"]
 [ext_resource type="Material" uid="uid://t6vd13gwufgk" path="res://Materials/GlowyMat.tres" id="2_mey5n"]
 [ext_resource type="PackedScene" uid="uid://ds4ifwlgii1u3" path="res://Scenes/TankSpawns/Explosion.tscn" id="2_mxhf6"]
-[ext_resource type="Material" uid="uid://b34r42676vic" path="res://Materials/Tank2.tres" id="3_xqwqb"]
+[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/OverRideableMat.tres" id="3_xqwqb"]
 [ext_resource type="Material" uid="uid://daas1mtu2wvv8" path="res://Materials/IntersectionMat.tres" id="5_xqwqb"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_rw1a4"]
 height = 0.099999964
-radius = 0.1
+radius = 0.75
 
 [sub_resource type="SphereMesh" id="SphereMesh_yln1e"]
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_il3xu"]
 height = 7.5
+radius = 0.8
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_mey5n"]
 
@@ -41,6 +42,7 @@ collision_layer = 4
 collision_mask = 4
 center_of_mass_mode = 1
 can_sleep = false
+continuous_cd = true
 script = ExtResource("1_mey5n")
 overlapSphere = NodePath("ExplosionArea")
 glowyBit = NodePath("GlowyBit")

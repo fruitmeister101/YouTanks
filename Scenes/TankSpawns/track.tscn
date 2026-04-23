@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dltqymjoy41dg"]
 
 [ext_resource type="Script" uid="uid://doduf8cm5ucnr" path="res://Scripts/Track.gd" id="1_qentn"]
-[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/Track.tres" id="2_geq0k"]
+[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/OverRideableMat.tres" id="2_geq0k"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_ewwv3"]
 material = ExtResource("2_geq0k")

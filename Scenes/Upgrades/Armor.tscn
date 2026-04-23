@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://dba5ik3xoll6d"]
 
 [ext_resource type="Script" uid="uid://c51bdiuviq6gx" path="res://Scripts/Upgrades/UpgradeObject.gd" id="1_udyat"]
-[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/Track.tres" id="2_23oor"]
+[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/OverRideableMat.tres" id="2_23oor"]
+[ext_resource type="PackedScene" uid="uid://pbgjl647j1q3" path="res://Scenes/ObjectSpawns/PowerUpBanner.tscn" id="2_juvos"]
 [ext_resource type="Script" uid="uid://dahavuogmwntv" path="res://Scripts/Upgrades/BaseUpgrade.gd" id="3_juvos"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rxtrn"]
@@ -33,6 +34,7 @@ outline_color = Color(0, 0, 0, 1)
 can_sleep = false
 script = ExtResource("1_udyat")
 label = NodePath("Label")
+statUpBanner = ExtResource("2_juvos")
 
 [node name="VisibleOnScreenNotifier3D" type="VisibleOnScreenNotifier3D" parent="." unique_id=1677423751]
 
@@ -59,6 +61,6 @@ mesh = SubResource("CylinderMesh_4qfi5")
 script = ExtResource("3_juvos")
 Mod = 4
 ModHow = 2
-ModAmount = 1.0
+ModAmount = 3.0
 
 [connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Destory"]

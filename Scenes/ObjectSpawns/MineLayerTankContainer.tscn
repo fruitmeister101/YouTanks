@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://7mnjy8prcwnb"]
+
+[ext_resource type="Script" uid="uid://b5lj850g48g7" path="res://Scripts/TankContainer.gd" id="1_uhgt0"]
+[ext_resource type="PackedScene" uid="uid://p8yw43hnk4gd" path="res://Scenes/Tanks/MineLayerTank.tscn" id="2_uhgt0"]
+
+[sub_resource type="GDScript" id="GDScript_rkxaq"]
+
+[node name="TankContainer" type="Node" unique_id=326813480 node_paths=PackedStringArray("spawner")]
+script = ExtResource("1_uhgt0")
+spawner = NodePath("TankSpawner")
+tankScene = ExtResource("2_uhgt0")
+
+[node name="TankSpawner" type="MultiplayerSpawner" parent="." unique_id=1462895150]
+_spawnable_scenes = PackedStringArray("uid://d18aylqansqdx", "uid://dltqymjoy41dg")
+spawn_path = NodePath("..")
+script = SubResource("GDScript_rkxaq")
+
+[connection signal="child_exiting_tree" from="." to="." method="ChildDied"]

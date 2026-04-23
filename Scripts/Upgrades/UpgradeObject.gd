@@ -2,6 +2,7 @@ class_name UpgradeObject extends RigidBody3D
 
 @export var label : Label
 @export var claimed : bool = false
+@export var statUpBanner : PackedScene
 
 var Upgrades : Array
 var prefabName: String
@@ -16,19 +17,6 @@ func _ready() -> void:
 
 func SetLabel():
 	var s = ""
-	#for up in Upgrades:
-		#if up is not Upgrade:
-			#continue
-		#s += str(Upgrade.StatChange.find_key(up.Mod))
-		#var amount = up.ModAmount
-		#if up.ModHow == Upgrade.HowToApply.Multiply:
-			#amount = (amount - 1) * 100
-		#if int(amount) == amount:
-			#amount = int(amount)
-		#s += " = " if up.ModHow == Upgrade.HowToApply.Set else " +" if amount > 0 else " -"
-		#s += str(abs(amount))
-		#s += "%" if up.ModHow == Upgrade.HowToApply.Multiply else ""
-		#s += "\n"
 	s += str(prefabName)
 	label.text = s
 	
@@ -43,6 +31,29 @@ func Claim(s : String):
 	var tank = get_node_or_null(s)
 	if tank:
 		if tank is Tank:
+			if statUpBanner:
+				var note = statUpBanner.instantiate()
+				if note is PowerUpLabel:
+					note.Lifetime += Upgrades.size()
+					note.Speed /= Upgrades.size()
+					var tex : String = ""
+					for up in Upgrades:
+						if up is not Upgrade:
+							continue
+						tex += str(Upgrade.StatChange.find_key(up.Mod))
+						var amount = up.ModAmount
+						if up.ModHow == Upgrade.HowToApply.Multiply:
+							amount = (amount - 1) * 100
+						if int(amount) == amount:
+							amount = int(amount)
+						tex += " = " if up.ModHow == Upgrade.HowToApply.Set else " + " if amount > 0 else " - "
+						tex += str(abs(amount))
+						tex += "%" if up.ModHow == Upgrade.HowToApply.Multiply else ""
+						tex += "\n"
+					note.text = tex
+					note.position = mainCam.unproject_position(global_position)
+					add_child(note)
+			
 			if not claimed :
 				tank.container.Upgrades.append(self)
 				for up in Upgrades:

@@ -3,9 +3,11 @@ class_name LandMine extends RigidBody3D
 @export var MINESIZE : float = 1:
 	set(value):
 		scale = Vector3(1,1,1) * value
+		
 @export var MINEEXPLOSIONRADIUS : float = 15
-@export var MINEEXPLOSIONDAMAGE : float = 10
+@export var MINEEXPLOSIONDAMAGE : float = 2
 @export var MINEEXPLOSIONTIMER : float = 25
+@export var StartVelocity : Vector3
 
 @export_category("Don't Touch")
 @export var overlapSphere : Area3D
@@ -16,10 +18,11 @@ var Armed : float = 0.25
 var spawner : MultiplayerSpawner
 
 
-signal Died
+signal Died(mine : LandMine)
 
 func _ready() -> void:
 	overlapSphere.scale = Vector3(1,1,1) * MINEEXPLOSIONRADIUS
+	linear_velocity = (StartVelocity)
 	
 
 func _physics_process(delta: float) -> void:
@@ -44,12 +47,12 @@ func Trigger(_body : Node3D):
 		return
 	if Armed > 0: 
 		return
-	MINEEXPLOSIONTIMER = 1
+	TakeDamage(0)
 
 @rpc("any_peer","call_local")
 func TakeDamage(_dmg : float):
 	#if is_multiplayer_authority():
-		MINEEXPLOSIONTIMER = 1
+		MINEEXPLOSIONTIMER = min(1,MINEEXPLOSIONTIMER)
 
 func Explode():
 	#await get_tree().create_timer(0.2).timeout
@@ -61,10 +64,10 @@ func Explode():
 		elif node is LandMine:
 			node.TakeDamage.rpc(MINEEXPLOSIONDAMAGE)
 		if node is RigidBody3D:
-			node.apply_impulse((node.global_position - global_position).normalized() * MINEEXPLOSIONDAMAGE)
+			node.apply_impulse((node.global_position - global_position).normalized() * MINEEXPLOSIONDAMAGE * 5)
 		elif node is CharacterBody3D:
-			node.velocity += (node.global_position - global_position).normalized() * MINEEXPLOSIONDAMAGE
-	
+			node.velocity += (node.global_position - global_position).normalized() * MINEEXPLOSIONDAMAGE * 5
+
 	var data = {
 		"spawn" : Explosion.resource_path,
 		"position" : global_position,
@@ -72,5 +75,5 @@ func Explode():
 	}
 	spawner.spawn(data)
 	
-	Died.emit()
+	Died.emit(self)
 	queue_free()
