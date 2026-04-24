@@ -45,7 +45,7 @@ properties/6/replication_mode = 1
 
 [node name="LandMine" type="RigidBody3D" unique_id=463996219 node_paths=PackedStringArray("overlapSphere", "glowyBit", "dangerZone")]
 collision_layer = 4
-collision_mask = 5
+collision_mask = 4
 center_of_mass_mode = 1
 can_sleep = false
 continuous_cd = true
