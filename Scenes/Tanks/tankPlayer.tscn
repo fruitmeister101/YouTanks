@@ -7,6 +7,7 @@
 [ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/OverRideableMat.tres" id="5_aweo3"]
 [ext_resource type="Material" uid="uid://8ynalyhfyhbm" path="res://Materials/LineMaterial.tres" id="6_apjm4"]
 [ext_resource type="Script" uid="uid://bmvqnow50f2q8" path="res://addons/LineRenderer/line_renderer.gd" id="7_bscpi"]
+[ext_resource type="Material" uid="uid://bgomnfcyvo8ic" path="res://Materials/OverRideableUnshadedMat.tres" id="8_rgc5o"]
 
 [sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_tsiek"]
 properties/0/path = NodePath(".:position")
@@ -24,6 +25,21 @@ properties/3/replication_mode = 1
 properties/4/path = NodePath(".:velocity")
 properties/4/spawn = true
 properties/4/replication_mode = 1
+properties/5/path = NodePath("MainBody/Node3D/TurretRotator/Barrel/FiringPoint/ActualTarget:position")
+properties/5/spawn = true
+properties/5/replication_mode = 1
+properties/6/path = NodePath("MainBody:instance_shader_parameters/Color")
+properties/6/spawn = true
+properties/6/replication_mode = 2
+properties/7/path = NodePath("MainBody/Node3D/WheelRight:instance_shader_parameters/Color")
+properties/7/spawn = true
+properties/7/replication_mode = 2
+properties/8/path = NodePath("MainBody/Node3D/WheelLeft:instance_shader_parameters/Color")
+properties/8/spawn = true
+properties/8/replication_mode = 2
+properties/9/path = NodePath("MainBody/Node3D/TurretRotator/Barrel:instance_shader_parameters/Color")
+properties/9/spawn = true
+properties/9/replication_mode = 2
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_0j3ql"]
 height = 16.0
@@ -55,7 +71,7 @@ _surfaces = [{
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_4rnvw"]
 height = 1.465
 
-[node name="tankPlayer" type="CharacterBody3D" unique_id=1118232497 node_paths=PackedStringArray("FiringPoint", "TrackPlacers", "BarrelAiming", "line", "targetingCursor", "sync")]
+[node name="tankPlayer" type="CharacterBody3D" unique_id=1118232497 node_paths=PackedStringArray("FiringPoint", "TrackPlacers", "BarrelAiming", "line", "targetingCursor", "sync", "MainBodyForColoring", "WheelsForColoring", "BarrelForColoring")]
 physics_interpolation_mode = 1
 input_ray_pickable = false
 slide_on_ceiling = false
@@ -77,6 +93,9 @@ BarrelAiming = NodePath("MainBody/Node3D/TurretRotator")
 line = NodePath("MainBody/Node3D/TurretRotator/Barrel/FiringPoint/LineRenderer3D")
 targetingCursor = NodePath("MainBody/Node3D/TurretRotator/Barrel/FiringPoint/ActualTarget")
 sync = NodePath("MultiplayerSynchronizer")
+MainBodyForColoring = NodePath("MainBody")
+WheelsForColoring = [NodePath("MainBody/Node3D/WheelRight"), NodePath("MainBody/Node3D/WheelLeft")]
+BarrelForColoring = NodePath("MainBody/Node3D/TurretRotator/Barrel")
 
 [node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=107474825]
 replication_config = SubResource("SceneReplicationConfig_tsiek")
@@ -130,6 +149,7 @@ mesh = SubResource("CylinderMesh_l8ytb")
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0.5, 0)
 
 [node name="LineRenderer3D" type="MeshInstance3D" parent="MainBody/Node3D/TurretRotator/Barrel/FiringPoint" unique_id=237872926]
+visible = false
 material_override = ExtResource("6_apjm4")
 cast_shadow = 0
 mesh = SubResource("ImmediateMesh_aweo3")
@@ -143,7 +163,8 @@ metadata/_custom_type_script = "uid://bmvqnow50f2q8"
 transform = Transform3D(-1, 9.379101e-15, -1.509958e-07, -3.8213692e-15, 1, 8.742276e-08, 1.509958e-07, 8.742276e-08, -1, 0, 2, 0)
 
 [node name="Target" type="MeshInstance3D" parent="MainBody/Node3D/TurretRotator/Barrel/FiringPoint/ActualTarget" unique_id=180470483]
-material_override = ExtResource("6_apjm4")
+material_override = ExtResource("8_rgc5o")
+instance_shader_parameters/Color = Color(0, 0, 0, 1)
 mesh = SubResource("ArrayMesh_tsiek")
 
 [node name="Port" type="Node3D" parent="MainBody/Node3D" unique_id=1132775586]

@@ -2,12 +2,33 @@
 
 [ext_resource type="PackedScene" uid="uid://cgtqgtsy1uac" path="res://Scenes/Tanks/tankPlayer.tscn" id="1_r3ex3"]
 [ext_resource type="Script" uid="uid://c8mdptnv6val6" path="res://Scripts/PlayerContainer.gd" id="1_rkxaq"]
+[ext_resource type="FontFile" uid="uid://bxr05vwxcu8pj" path="res://Courier New Regular.ttf" id="3_lq8tj"]
 
-[sub_resource type="GDScript" id="GDScript_rkxaq"]
+[sub_resource type="LabelSettings" id="LabelSettings_rkxaq"]
+line_spacing = 2.0
+font = ExtResource("3_lq8tj")
+font_size = 19
+outline_size = 10
+outline_color = Color(0, 0, 0, 1)
 
-[node name="PlayerContainer" type="Node" unique_id=326813480 node_paths=PackedStringArray("UI", "spawner")]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_lq8tj"]
+properties/0/path = NodePath("Control/ColorPickerButton Body:color")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath("Control/ColorPickerButton2 Wheels:color")
+properties/1/spawn = true
+properties/1/replication_mode = 2
+properties/2/path = NodePath("Control/ColorPickerButton3 Barrel:color")
+properties/2/spawn = true
+properties/2/replication_mode = 2
+
+[node name="PlayerContainer" type="Node" unique_id=326813480 node_paths=PackedStringArray("StatDisplayLabel", "StatDisplayButton", "PlayerColorBody", "PlayerColorWheels", "PlayerColorBarrel", "spawner")]
 script = ExtResource("1_rkxaq")
-UI = NodePath("Label")
+StatDisplayLabel = NodePath("Control/StatDisplay")
+StatDisplayButton = NodePath("Control/Button")
+PlayerColorBody = NodePath("Control/ColorPickerButton Body")
+PlayerColorWheels = NodePath("Control/ColorPickerButton2 Wheels")
+PlayerColorBarrel = NodePath("Control/ColorPickerButton3 Barrel")
 spawner = NodePath("PlayerTankSpawner")
 tankScene = ExtResource("1_r3ex3")
 persistent = true
@@ -15,15 +36,62 @@ persistent = true
 [node name="PlayerTankSpawner" type="MultiplayerSpawner" parent="." unique_id=1462895150]
 _spawnable_scenes = PackedStringArray("uid://d18aylqansqdx", "uid://dltqymjoy41dg", "uid://cgtqgtsy1uac")
 spawn_path = NodePath("..")
-script = SubResource("GDScript_rkxaq")
 
-[node name="Label" type="Label" parent="." unique_id=148324395]
+[node name="Control" type="Control" parent="." unique_id=1044552248]
+layout_mode = 3
 anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
-offset_top = -23.0
+offset_top = -40.0
 offset_right = 40.0
 grow_vertical = 0
-horizontal_alignment = 2
+
+[node name="StatDisplay" type="Label" parent="Control" unique_id=148324395]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -96.0
+offset_right = 225.0
+offset_bottom = -73.0
+grow_vertical = 0
+text = "You Shouldn't See This Text"
+label_settings = SubResource("LabelSettings_rkxaq")
+
+[node name="Button" type="Button" parent="Control" unique_id=2084244011]
+layout_mode = 0
+offset_top = -33.0
+offset_right = 93.0
+offset_bottom = 40.0
+text = "Show Stats"
+
+[node name="ColorPickerButton Body" type="ColorPickerButton" parent="Control" unique_id=435896061]
+layout_mode = 0
+offset_left = 93.0
+offset_top = -27.0
+offset_right = 157.0
+offset_bottom = 23.0
+
+[node name="ColorPickerButton2 Wheels" type="ColorPickerButton" parent="Control" unique_id=933181932]
+layout_mode = 0
+offset_left = 157.0
+offset_top = -27.0
+offset_right = 221.0
+offset_bottom = 23.0
+
+[node name="ColorPickerButton3 Barrel" type="ColorPickerButton" parent="Control" unique_id=426372292]
+layout_mode = 0
+offset_left = 221.0
+offset_top = -27.0
+offset_right = 285.0
+offset_bottom = 23.0
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="Control" unique_id=748018585]
+root_path = NodePath("../..")
+replication_config = SubResource("SceneReplicationConfig_lq8tj")
 
 [connection signal="child_exiting_tree" from="." to="." method="ChildDied"]
+[connection signal="pressed" from="Control/Button" to="." method="ShowHideStats"]
+[connection signal="color_changed" from="Control/ColorPickerButton Body" to="." method="ChangeColor"]
+[connection signal="color_changed" from="Control/ColorPickerButton2 Wheels" to="." method="ChangeColor"]
+[connection signal="color_changed" from="Control/ColorPickerButton3 Barrel" to="." method="ChangeColor"]

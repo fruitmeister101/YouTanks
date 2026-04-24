@@ -82,11 +82,21 @@ var intercept
 
 @export var sync : MultiplayerSynchronizer
 
+var maxHealth : float
+var startColor : Color
+@export var MainBodyForColoring : MeshInstance3D
+@export var WheelsForColoring : Array[MeshInstance3D]
+@export var BarrelForColoring : MeshInstance3D
+
+
 func _ready() -> void:
+	maxHealth = HEALTH
+	if MainBodyForColoring:
+		startColor = MainBodyForColoring.get_instance_shader_parameter("Color")
 	if targetingCursor:
 		targetingCursor.position = Vector3.ZERO
-		if not is_multiplayer_authority():
-			targetingCursor.hide()
+		#if not is_multiplayer_authority():
+			#targetingCursor.hide()
 	mainView = get_viewport()
 	mainCam = mainView.get_camera_3d()
 
@@ -206,6 +216,8 @@ func TakeDamage(dmg : float):
 		HEALTH -= dmg
 		if HEALTH <= 0:
 			Destroy()
+	if MainBodyForColoring:
+		MainBodyForColoring.set_instance_shader_parameter("Color", startColor * (HEALTH / maxHealth))
 
 @rpc("any_peer","call_local")
 func Destroy(force : bool = false) -> void:

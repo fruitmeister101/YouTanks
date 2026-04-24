@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=3 uid="uid://bgomnfcyvo8ic"]
+
+[ext_resource type="Shader" uid="uid://jjwhrtvg1ckh" path="res://Materials/OverRideableUnshaded.tres" id="1_8g71c"]
+
+[resource]
+resource_local_to_scene = true
+render_priority = 0
+shader = ExtResource("1_8g71c")

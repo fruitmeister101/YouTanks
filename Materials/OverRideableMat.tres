@@ -1,6 +1,6 @@
 [gd_resource type="ShaderMaterial" format=3 uid="uid://whyloknue3o1"]
 
-[ext_resource type="Shader" uid="uid://bjrfxw1yfqdth" path="res://Materials/TrackShader.tres" id="1_itkf1"]
+[ext_resource type="Shader" uid="uid://bjrfxw1yfqdth" path="res://Materials/OverRideable.tres" id="1_itkf1"]
 
 [resource]
 resource_local_to_scene = true
