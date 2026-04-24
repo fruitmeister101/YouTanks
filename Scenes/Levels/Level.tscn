@@ -3,13 +3,15 @@
 [ext_resource type="Script" uid="uid://cqcnlghm2e6ys" path="res://Scripts/Level.gd" id="1_k5f4k"]
 [ext_resource type="Material" uid="uid://ncd4wr603yq7" path="res://Materials/Floor.tres" id="2_81xng"]
 [ext_resource type="PackedScene" uid="uid://7mnjy8prcwnb" path="res://Scenes/ObjectSpawns/MineLayerTankContainer.tscn" id="2_bk2yi"]
+[ext_resource type="PackedScene" uid="uid://goyvabnjgst8" path="res://Scenes/ObjectSpawns/BasicTankContainer.tscn" id="3_5lnup"]
+[ext_resource type="PackedScene" uid="uid://bs6npnqxm08ns" path="res://Scenes/ObjectSpawns/MoverTankContainer.tscn" id="4_l0mwj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tumq0"]
 albedo_color = Color(0, 0.25882354, 0.2901961, 1)
 
 [node name="Level" type="Node" unique_id=1206961934]
 script = ExtResource("1_k5f4k")
-testTanks = Array[PackedScene]([ExtResource("2_bk2yi")])
+testTanks = Array[PackedScene]([ExtResource("2_bk2yi"), ExtResource("3_5lnup"), ExtResource("4_l0mwj")])
 
 [node name="DynamicObjects" type="Node3D" parent="." unique_id=1263524994]
 
@@ -39,6 +41,7 @@ light_energy = 2.575
 shadow_enabled = true
 
 [node name="SpawnEnemyButton" type="Button" parent="." unique_id=1588708197]
+visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0
@@ -48,6 +51,7 @@ grow_horizontal = 0
 text = "Spawn Random Enemy"
 
 [node name="SpawnUpgradeButton" type="Button" parent="." unique_id=1058210834]
+visible = false
 anchors_preset = 1
 anchor_left = 1.0
 anchor_right = 1.0

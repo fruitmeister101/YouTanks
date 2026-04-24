@@ -7,14 +7,20 @@ class_name TankContainer extends Node
 @export var Upgrades : Array[UpgradeObject]
 @export var persistent : bool = false
 @export var InstantSpawns : int = 1
-@export var RespawnButton: Button
+#@export var RespawnButton: Button
+@export
+
+var Temporaries : Array = []
 
 var baseStats : Dictionary
 var originalChildCount : int
 
+signal choseUpgrade(up : UpgradeObject)
+signal tankDied(t : TankContainer, force : bool)
+
 func _ready() -> void:
 	originalChildCount = get_child_count()
-	if RespawnButton and not is_multiplayer_authority(): RespawnButton.hide()
+	#if RespawnButton and not is_multiplayer_authority(): RespawnButton.hide()
 	
 	spawner.spawn_function = SpawnObj
 	
@@ -32,10 +38,11 @@ func _ready() -> void:
 	t.free()
 	
 	for i in InstantSpawns:
-		Respawn()
+		Respawn(true)
 
-func Respawn():
-	if is_multiplayer_authority():
+@rpc("any_peer","call_local")
+func Respawn(Invinsible : bool = false):
+	#if is_multiplayer_authority():
 		if myTanks.size() >= maxTanks: 
 			return
 		if Level.MainLevel == null:
@@ -45,14 +52,24 @@ func Respawn():
 			"position" : Level.MainLevel.GetRandomCoordinate(),
 			"rotation" : randf_range(-PI,PI),
 			"id" : str(multiplayer.get_unique_id()),
+			"invinsible" : Invinsible
 		}
 		var t = spawner.spawn(data)
 		if t is Tank:
 			t.spawner = spawner
 			#t.SetUp(multiplayer.get_unique_id())
 	
-func TankDied(tank : Tank):
+func TankDied(tank : Tank, force : bool = false):
 	#DropUpgrade(tank)
+	if force:
+		for thing in Temporaries:
+			if thing:
+				if thing is Bullet:
+					thing.Destroy.rpc(true)
+				if thing is LandMine:
+					thing.Destroy.rpc(true)
+	tankDied.emit(self, force)
+	RoundHandler.handler.TankDied.rpc(get_path(), force)
 	PublicEraseTank.rpc(tank.get_path())
 	#myTanks.erase(tank)
 
@@ -107,8 +124,6 @@ func UpgradeTank(up : Upgrade, p : Tank):
 		Upgrade.HowToApply.None:
 			pass
 	p.set(stat, value)
-	if p is PlayerTank:
-		p.UpdateUI()
 
 
 func DowngradeTank(up : Upgrade, p : Tank):
@@ -144,21 +159,23 @@ func SpawnObj(data : Dictionary) -> Node:
 		if data.has("scale"):
 			obj.scale = data["scale"]
 	if obj is Bullet:
+		Temporaries.append(obj)
+		obj.Died.connect(EraseThing)
 		var string : String = data["parentTank"]
 		var tank = get_node(string)
 		obj.parentTank = tank
-		if tank:
+		if tank is Tank:
 			tank.bulletsOut += 1
-		var changingStats : Array = Upgrade.StatChange.keys()
-		changingStats = changingStats.map(func(x):return x.to_upper())
-		
-		for stat in changingStats:
-			if stat in obj:
-				obj.set(stat, obj.parentTank.get(stat))
-		#for stat in obj.get_property_list():
-			#if stat["name"].to_upper() in changingStats:
-				#obj.set(stat["name"].to_upper(), obj.parentTank.get(stat["name"].to_upper()))
-		obj.connect("Died", obj.parentTank.BulletFreed)
+			var changingStats : Array = Upgrade.StatChange.keys()
+			changingStats = changingStats.map(func(x):return x.to_upper())
+			
+			for stat in changingStats:
+				if stat in obj:
+					obj.set(stat, obj.parentTank.get(stat))
+			#for stat in obj.get_property_list():
+				#if stat["name"].to_upper() in changingStats:
+					#obj.set(stat["name"].to_upper(), obj.parentTank.get(stat["name"].to_upper()))
+			obj.Died.connect(obj.parentTank.BulletFreed)
 	if obj is Tank:
 		obj.position = Level.MainLevel.GetRandomCoordinate()
 		obj.scale *= obj.PLAYERSIZE
@@ -169,7 +186,11 @@ func SpawnObj(data : Dictionary) -> Node:
 		DoAllUpgrades(obj)
 		obj.rotation.y = randf_range(-PI,PI)
 		obj.SetUp()
+		if data.has("invinsible"):
+			obj.Invinsible = data["invinsible"]
 	if obj is LandMine:
+		Temporaries.append(obj)
+		obj.Died.connect(EraseThing)
 		var string : String = data["parentTank"]
 		var tank = get_node(string)
 		obj.connect("Died", tank.MineFreed)
@@ -187,8 +208,9 @@ func SpawnObj(data : Dictionary) -> Node:
 
 func Disconnect():
 	if not multiplayer.is_server():
-		for i in Upgrades.size():
-			DropUpgradeHere(Level.MainLevel.GetRandomCoordinate() + Vector3.UP * 3)
+		for up in Upgrades:
+			if up:
+				up.Destory.rpc()
 	queue_free()
 
 @rpc("any_peer","call_local","reliable")
@@ -198,3 +220,7 @@ func PublicEraseTank(s : String):
 		if tank is Tank:
 			if tank in myTanks:
 				myTanks.erase(tank)
+
+func EraseThing(thing):
+	if thing in Temporaries:
+		thing.Destroy(true)

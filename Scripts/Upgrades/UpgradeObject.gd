@@ -9,6 +9,8 @@ var prefabName: String
 var viewport : Viewport
 var mainCam : Camera3D
 
+signal destoryed(up : UpgradeObject)
+
 func _ready() -> void:
 	viewport = get_viewport()
 	mainCam = viewport.get_camera_3d()
@@ -63,6 +65,7 @@ func Claim(s : String):
 				claimed = true
 				label.hide()
 				hide()
+			tank.container.choseUpgrade.emit(self)
 
 @rpc("any_peer","call_local","reliable")
 func UnClaim(s : String):
@@ -81,6 +84,8 @@ func UnClaim(s : String):
 				label.show()
 				show()
 
+@rpc("any_peer","call_local")
 func Destory():
 	if not claimed:
+		destoryed.emit(self)
 		queue_free()

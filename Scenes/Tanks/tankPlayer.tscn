@@ -55,15 +55,15 @@ _surfaces = [{
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_4rnvw"]
 height = 1.465
 
-[node name="tankPlayer" type="CharacterBody3D" unique_id=1118232497 node_paths=PackedStringArray("UI", "FiringPoint", "TrackPlacers", "BarrelAiming", "line", "targetingCursor", "sync")]
+[node name="tankPlayer" type="CharacterBody3D" unique_id=1118232497 node_paths=PackedStringArray("FiringPoint", "TrackPlacers", "BarrelAiming", "line", "targetingCursor", "sync")]
 physics_interpolation_mode = 1
 input_ray_pickable = false
 slide_on_ceiling = false
 script = ExtResource("1_rgc5o")
-UI = NodePath("Label")
 MOVESPEED = 3.0
 TURNSPEED = 20.0
 BARRELAIMSPEED = 5.0
+HEALTH = 3.0
 FRICTION = 3.0
 BULLETCOOLDOWN = 0.75
 BULLETDAMAGE = 1.0
@@ -88,7 +88,7 @@ shape = SubResource("CylinderShape3D_0j3ql")
 [node name="MainBody" type="MeshInstance3D" parent="." unique_id=918243672]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
 material_override = ExtResource("5_aweo3")
-instance_shader_parameters/Color = Color(0, 0, 1, 1)
+instance_shader_parameters/Color = Color(0, 0.7764706, 0, 1)
 mesh = SubResource("SphereMesh_snc5l")
 
 [node name="Node3D" type="Node3D" parent="MainBody" unique_id=200739204]
@@ -98,7 +98,7 @@ transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0,
 transform = Transform3D(0.65000004, 0, 0, 0, -2.8412403e-08, -0.65000004, 0, 0.65000004, -2.8412403e-08, 0.5500001, -0.52500004, 0)
 layers = 2
 material_override = ExtResource("5_aweo3")
-instance_shader_parameters/Color = Color(0, 1, 0.4745098, 1)
+instance_shader_parameters/Color = Color(0, 0.39215687, 0, 1)
 mesh = SubResource("CapsuleMesh_fbtf3")
 
 [node name="Track Placer" type="Node3D" parent="MainBody/Node3D/WheelRight" unique_id=190624727]
@@ -108,7 +108,7 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 2
 transform = Transform3D(0.65000004, 0, 0, 0, -2.8412403e-08, -0.65000004, 0, 0.65000004, -2.8412403e-08, -0.5500001, -0.52500004, 0)
 layers = 2
 material_override = ExtResource("5_aweo3")
-instance_shader_parameters/Color = Color(0, 1, 0.4745098, 1)
+instance_shader_parameters/Color = Color(0, 0.39215687, 0, 1)
 mesh = SubResource("CapsuleMesh_elvtb")
 
 [node name="Track Placer" type="Node3D" parent="MainBody/Node3D/WheelLeft" unique_id=1631883076]
@@ -122,6 +122,7 @@ transform = Transform3D(1.0000001, 0, 0, 0, 1.0000001, 0, 0, 0, 1.0000001, 0, 0,
 transform = Transform3D(-0.65, 5.6824803e-08, 0, 2.483891e-15, 2.8412401e-08, -0.65, -5.6824803e-08, -0.65, -2.8412401e-08, 0, 0, -0.6)
 layers = 2
 material_override = ExtResource("5_aweo3")
+instance_shader_parameters/Alpha = 1.0
 instance_shader_parameters/Color = Color(0, 0.60784316, 0, 1)
 mesh = SubResource("CylinderMesh_l8ytb")
 
@@ -153,12 +154,3 @@ layers = 2
 material_override = ExtResource("5_aweo3")
 instance_shader_parameters/Color = Color(0.0010121485, 0.000417689, 5.5407636e-05, 1)
 mesh = SubResource("CapsuleMesh_4rnvw")
-
-[node name="Label" type="Label" parent="." unique_id=229543208]
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_top = -23.0
-offset_right = 40.0
-grow_vertical = 0
-horizontal_alignment = 2

@@ -20,7 +20,7 @@ func SpawnRandomEnemy():
 		"rotation" : Vector3(0, randf_range(-PI,PI),0),
 		"scale" : Vector3(0.6,0.6,0.6),
 	}
-	DoSpawn.rpc(data)
+	return GM.gm.ObjectSpawner.spawn(data)
 	
 func SpawnRandomUpgrade():
 	var up = testUpgrades.pick_random()
@@ -29,13 +29,8 @@ func SpawnRandomUpgrade():
 		"position" : GetRandomCoordinate() + Vector3.UP * 3,
 		"name" : up.resource_path.split("/")[-1].split(".")[0]
 	}
-	DoSpawn.rpc(data)
-
-@rpc("any_peer","call_local")
-func DoSpawn(data):
-	if is_multiplayer_authority():
-		GM.gm.ObjectSpawner.spawn(data)
-	
+	#DoSpawn.rpc(data)
+	return GM.gm.ObjectSpawner.spawn(data)
 
 func load_all_resources(path: String) -> Array[Resource]:
 	var resources: Array[Resource] = []

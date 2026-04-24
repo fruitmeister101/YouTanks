@@ -57,7 +57,7 @@ mesh = SubResource("CylinderMesh_4qfi5")
 [node name="Up" type="Node" parent="." unique_id=845242669]
 script = ExtResource("3_t4oob")
 Mod = 21
-ModHow = 3
+ModHow = 2
 ModAmount = 1.0
 
 [node name="Up2" type="Node" parent="." unique_id=851104857]

@@ -5,24 +5,25 @@
 
 [sub_resource type="GDScript" id="GDScript_rkxaq"]
 
-[node name="PlayerContainer" type="Node" unique_id=326813480 node_paths=PackedStringArray("spawner", "RespawnButton")]
+[node name="PlayerContainer" type="Node" unique_id=326813480 node_paths=PackedStringArray("UI", "spawner")]
 script = ExtResource("1_rkxaq")
+UI = NodePath("Label")
 spawner = NodePath("PlayerTankSpawner")
 tankScene = ExtResource("1_r3ex3")
 persistent = true
-RespawnButton = NodePath("RespawnButton")
-
-[node name="RespawnButton" type="Button" parent="." unique_id=877069524]
-offset_left = 1.0
-offset_top = 124.0
-offset_right = 92.0
-offset_bottom = 155.0
-text = "Respawn"
 
 [node name="PlayerTankSpawner" type="MultiplayerSpawner" parent="." unique_id=1462895150]
 _spawnable_scenes = PackedStringArray("uid://d18aylqansqdx", "uid://dltqymjoy41dg", "uid://cgtqgtsy1uac")
 spawn_path = NodePath("..")
 script = SubResource("GDScript_rkxaq")
 
+[node name="Label" type="Label" parent="." unique_id=148324395]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 40.0
+grow_vertical = 0
+horizontal_alignment = 2
+
 [connection signal="child_exiting_tree" from="." to="." method="ChildDied"]
-[connection signal="pressed" from="RespawnButton" to="." method="Respawn"]

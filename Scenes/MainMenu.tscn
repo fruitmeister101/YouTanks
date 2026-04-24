@@ -3,6 +3,12 @@
 [ext_resource type="Script" uid="uid://cw3dsvbny4upo" path="res://Scripts/MainMenu.gd" id="1_tt5f1"]
 [ext_resource type="PackedScene" uid="uid://cibriq5oxm3x4" path="res://Scenes/ObjectSpawns/PlayerContainer.tscn" id="2_8saeu"]
 [ext_resource type="PackedScene" uid="uid://dmn4ii75wlpyn" path="res://Scenes/Levels/Level.tscn" id="3_8saeu"]
+[ext_resource type="Script" uid="uid://csq2fe12sa2v" path="res://Scripts/RoundManager.gd" id="4_ghw46"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ghw46"]
+font_size = 30
+outline_size = 10
+outline_color = Color(0, 0, 0.011764706, 1)
 
 [node name="MainMenu" type="Node" unique_id=453267652 node_paths=PackedStringArray("UI", "GameUI", "JoinButton", "LobbyText", "objectSpawnLocation", "mainCam", "LevelSpawner", "ObjectSpawner")]
 script = ExtResource("1_tt5f1")
@@ -17,12 +23,44 @@ mainCam = NodePath("Camera3D")
 LevelSpawner = NodePath("DefaultSpawner")
 ObjectSpawner = NodePath("ObjectSpawner")
 
+[node name="RoundManager" type="Node" parent="." unique_id=1683177581 node_paths=PackedStringArray("StartGameButton", "textLabel")]
+script = ExtResource("4_ghw46")
+StartGameButton = NodePath("Button")
+textLabel = NodePath("../Label")
+upgradesLeftBehind = 2
+
+[node name="Button" type="Button" parent="RoundManager" unique_id=1311681123]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -106.0
+offset_top = -31.0
+grow_horizontal = 0
+grow_vertical = 0
+text = "START GAME"
+
+[node name="Label" type="Label" parent="." unique_id=756965466]
+visible = false
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -125.0
+offset_right = 124.0
+offset_bottom = 42.0
+grow_horizontal = 2
+text = "Display Text here"
+label_settings = SubResource("LabelSettings_ghw46")
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="InGameUI" type="Control" parent="." unique_id=871044937]
 visible = false
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_right = 1151.0
+offset_bottom = 647.0
 
 [node name="PauseButton" type="Button" parent="InGameUI" unique_id=1559182693]
 layout_mode = 0
@@ -43,49 +81,74 @@ text = "Exit
 [node name="HostJoin UI" type="Control" parent="." unique_id=639227316]
 layout_mode = 3
 anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -1.0
+offset_top = -1.0
+offset_right = 1151.0
+offset_bottom = 647.0
 
 [node name="HostButton" type="Button" parent="HostJoin UI" unique_id=685608167]
 layout_mode = 0
-offset_right = 160.0
-offset_bottom = 35.0
-text = "HOST"
-
-[node name="HostLocalButton" type="Button" parent="HostJoin UI" unique_id=507607719]
-layout_mode = 0
-offset_top = 179.0
-offset_right = 160.0
-offset_bottom = 214.0
-text = "HOST LOCAL 
-(LocalHost)"
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 161.0
+offset_bottom = 60.0
+text = "HOST on Steam"
 
 [node name="JoinButton" type="Button" parent="HostJoin UI" unique_id=2074404165]
 layout_mode = 0
 offset_left = 1.0
-offset_top = 35.0
+offset_top = 131.0
 offset_right = 161.0
-offset_bottom = 70.0
+offset_bottom = 191.0
 disabled = true
-text = "JOIN"
-
-[node name="JoinLocalButton" type="Button" parent="HostJoin UI" unique_id=1400222112]
-layout_mode = 0
-offset_left = 1.0
-offset_top = 233.0
-offset_right = 161.0
-offset_bottom = 287.0
-text = "JOIN LOCAL 
-(LocalHost)"
+text = "JOIN via Steam"
 
 [node name="LobbyID" type="LineEdit" parent="HostJoin UI" unique_id=392921979]
 layout_mode = 0
 offset_left = 1.0
-offset_top = 70.0
+offset_top = 71.0
 offset_right = 161.0
-offset_bottom = 105.0
-placeholder_text = "LOBBY ID"
+offset_bottom = 131.0
+placeholder_text = "Enter LOBBY ID"
 alignment = 1
+
+[node name="HostLocalUI" type="Control" parent="HostJoin UI" unique_id=133071234]
+top_level = true
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 41.0
+offset_bottom = 1.0
+grow_vertical = 0
+
+[node name="HostLocalButton" type="Button" parent="HostJoin UI/HostLocalUI" unique_id=507607719]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -109.0
+offset_right = 159.0
+offset_bottom = -55.0
+grow_vertical = 0
+text = "HOST LOCAL 
+(LocalHost)"
+
+[node name="JoinLocalButton" type="Button" parent="HostJoin UI/HostLocalUI" unique_id=1400222112]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = -1.0
+offset_top = -55.0
+offset_right = 159.0
+offset_bottom = -1.0
+grow_vertical = 0
+text = "JOIN LOCAL 
+(LocalHost)"
 
 [node name="DefaultSpawner" type="MultiplayerSpawner" parent="." unique_id=1893466806]
 spawn_path = NodePath("../SpawnHere")
@@ -103,12 +166,13 @@ projection = 1
 current = true
 size = 25.0
 
-[node name="RoundManager" type="Node" parent="." unique_id=1683177581]
-
+[connection signal="pressed" from="RoundManager/Button" to="RoundManager" method="StartGame"]
 [connection signal="pressed" from="InGameUI/PauseButton" to="." method="Pause"]
 [connection signal="pressed" from="InGameUI/ExitButton" to="." method="ExitToMenu"]
 [connection signal="pressed" from="HostJoin UI/HostButton" to="." method="HostPressed"]
-[connection signal="pressed" from="HostJoin UI/HostLocalButton" to="." method="HostLocal"]
+[connection signal="pressed" from="HostJoin UI/HostButton" to="RoundManager" method="ShowLabel"]
 [connection signal="pressed" from="HostJoin UI/JoinButton" to="." method="JoinPressed"]
-[connection signal="pressed" from="HostJoin UI/JoinLocalButton" to="." method="JoinLocal"]
 [connection signal="text_changed" from="HostJoin UI/LobbyID" to="." method="TextUpdated"]
+[connection signal="pressed" from="HostJoin UI/HostLocalUI/HostLocalButton" to="." method="HostLocal"]
+[connection signal="pressed" from="HostJoin UI/HostLocalUI/HostLocalButton" to="RoundManager" method="ShowLabel"]
+[connection signal="pressed" from="HostJoin UI/HostLocalUI/JoinLocalButton" to="." method="JoinLocal"]

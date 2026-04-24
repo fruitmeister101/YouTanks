@@ -5,8 +5,8 @@ var peer : SteamMultiplayerPeer
 @export var PlayerScene : PackedScene
 @export var levelScene : PackedScene
 var isHost : bool = false
-@export var UI : Control
-@export var GameUI : Control
+@export var UI : Node
+@export var GameUI : Node
 @export var JoinButton : Button
 @export var LobbyText : LineEdit
 var isJoining : bool = false
@@ -233,3 +233,10 @@ func GetRandomFloat(mn: float,mx: float):
 	
 func GetRandomInt(mn: int,mx: int):
 	return Randy.randi_range(mn,mx)
+
+@rpc("any_peer","call_local")
+func MakeActivePlayer(s : String):
+	var p = get_node_or_null(s)
+	if p is TankContainer:
+		if not ActivePlayers.has(p):
+			ActivePlayers.append(p)

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://djeiv7r4bv4v8"]
 
-[ext_resource type="Material" uid="uid://ujgvap48e85n" path="res://Materials/Tank3.tres" id="1_e5cov"]
+[ext_resource type="Material" uid="uid://whyloknue3o1" path="res://Materials/OverRideableMat.tres" id="1_e7ik0"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_5ptk1"]
 
@@ -19,5 +19,8 @@ shape = SubResource("BoxShape3D_5ptk1")
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1793802899]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
 layers = 2
-material_override = ExtResource("1_e5cov")
+material_override = ExtResource("1_e7ik0")
+instance_shader_parameters/Alpha = 0.5
+instance_shader_parameters/Color = Color(0, 0.6039216, 0.7176471, 1)
+instance_shader_parameters/Glow = Color(0, 0, 0, 1)
 mesh = SubResource("BoxMesh_x0e3h")

@@ -75,5 +75,10 @@ func Explode():
 	}
 	spawner.spawn(data)
 	
-	Died.emit(self)
+	Destroy()
+
+@rpc("any_peer","call_local")
+func Destroy(_force : bool = false):
+	if not _force:
+		Died.emit(self)
 	queue_free()

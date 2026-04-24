@@ -32,7 +32,7 @@ class_name Bullet extends CharacterBody3D
 @export var cast : ShapeCast3D
 @export var sync : MultiplayerSynchronizer
 @export var trailTron : Tronizer
-signal Died
+signal Died(b : Bullet)
 var died :bool = false
 var points : Array[Vector3]
 var parentTank : Tank
@@ -106,10 +106,12 @@ func TakeDamage(dmg : float):
 		if BULLETHEALTH <= 0:
 			Destroy()
 
-func Destroy() -> void:
+@rpc("any_peer","call_local")
+func Destroy(_force : bool = false) -> void:
 	if !died:
 		hide()
-		Died.emit()
+		if not _force:
+			Died.emit(self)
 		died = true
 		ReparentTrail.rpc()
 		queue_free()

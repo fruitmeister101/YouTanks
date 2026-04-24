@@ -35,7 +35,7 @@ point_count = 2
 
 [node name="Bullet" type="CharacterBody3D" unique_id=40436193 node_paths=PackedStringArray("trail", "cast", "sync", "trailTron")]
 collision_layer = 2
-collision_mask = 7
+collision_mask = 5
 axis_lock_linear_y = true
 axis_lock_angular_x = true
 axis_lock_angular_y = true

@@ -69,7 +69,13 @@ ModAmount = 1.0
 [node name="Up3" type="Node" parent="." unique_id=447163818]
 script = ExtResource("3_d8kpv")
 Mod = 14
-ModHow = 2
+ModHow = 3
 ModAmount = 5.0
+
+[node name="Up4" type="Node" parent="." unique_id=2020661127]
+script = ExtResource("3_d8kpv")
+Mod = 11
+ModHow = 1
+ModAmount = 0.667
 
 [connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Destory"]

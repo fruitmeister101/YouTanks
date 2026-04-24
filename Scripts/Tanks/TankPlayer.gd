@@ -1,6 +1,5 @@
 class_name PlayerTank extends Tank
 
-@export var UI : Label
 
 func _enter_tree() -> void:
 	#set_multiplayer_authority(name.split(" ")[0].to_int())
@@ -22,22 +21,10 @@ func _ready() -> void:
 	super._ready()
 	mainView = get_viewport()
 	mainCam = mainView.get_camera_3d()
-	if is_multiplayer_authority():
-		UpdateUI()
-	else:
-		UI.hide()
+	
 	
 
-func UpdateUI():
-	if UI:
-		var s : String = ""
-		var stats = Upgrade.StatChange.keys()
-		#stats.sort()
-		for stat : String in stats:
-			stat =  stat
-			if stat.to_upper() in self:
-				s += stat + " : " + str(get(stat.to_upper())) + "\n"
-		UI.text = s
+
 
 func HandleInputs():
 	if is_multiplayer_authority():

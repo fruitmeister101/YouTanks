@@ -13,7 +13,7 @@ func _ready() -> void:
 	b.connect("Died", IsDying)
 	s.backface_collision = true
 
-func IsDying():
+func IsDying(_bullet : Bullet):
 	dying = true
 
 

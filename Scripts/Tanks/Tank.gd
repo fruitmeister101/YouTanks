@@ -32,6 +32,7 @@ class_name Tank extends CharacterBody3D
 @export var BULLETTRON : int = 0
 @export var BULLETTRAILLENGTH : float = 1
 
+@export_category("MineVars")
 @export var MINEEXPLOSIONRADIUS : float = 15
 @export var MINEEXPLOSIONDAMAGE : float = 2
 @export var MINEEXPLOSIONTIMER : float = 25
@@ -58,7 +59,7 @@ class_name Tank extends CharacterBody3D
 @export var targetingCursor : Node3D
 
 var mineCooldown : float = 0
-
+var Invinsible : bool = false
 
 signal Died(tank : Tank)
 
@@ -80,10 +81,6 @@ var InputMousePos : Vector2
 var intercept
 
 @export var sync : MultiplayerSynchronizer
-
-var needToHandleUpgrade : Array[UpgradeObject]
-var needToDiscardUpgrade : Array[UpgradeObject]
-var needToChangeSomething : Array
 
 func _ready() -> void:
 	if targetingCursor:
@@ -203,18 +200,25 @@ func Move(_delta: float = 0) ->void:
 
 @rpc("any_peer","call_local")
 func TakeDamage(dmg : float):
+	if Invinsible:
+		return
 	if is_multiplayer_authority():
 		HEALTH -= dmg
 		if HEALTH <= 0:
 			Destroy()
 
-func Destroy() -> void:
-	Died.emit(self)
+@rpc("any_peer","call_local")
+func Destroy(force : bool = false) -> void:
+	Died.emit(self, force)
 	hide()
 	queue_free()
 
-func BulletFreed() -> void:
+func BulletFreed(_bullet : Bullet) -> void:
 	bulletsOut -= 1
 
-func MineFreed(mine : LandMine) -> void:
+func MineFreed(_mine : LandMine) -> void:
 	landMinesOut -= 1
+
+@rpc("any_peer","call_local")
+func MakeVincible():
+	Invinsible = false
