@@ -30,7 +30,7 @@ properties/3/replication_mode = 2
 
 [sub_resource type="Curve" id="Curve_dnqyx"]
 _limits = [0.0, 0.1, 0.0, 1.0]
-_data = [Vector2(0, 0.04), 0.0, 0.0, 0, 1, Vector2(1, 0.04), 0.0, 0.0, 1, 0]
+_data = [Vector2(0, 0), 0.0, 0.04, 0, 1, Vector2(1, 0.04), 0.04, 0.0, 1, 0]
 point_count = 2
 
 [node name="Bullet" type="CharacterBody3D" unique_id=40436193 node_paths=PackedStringArray("trail", "cast", "sync", "trailTron")]

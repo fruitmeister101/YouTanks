@@ -193,7 +193,7 @@ func Move(_delta: float = 0) ->void:
 	if (lastTrackPlaced - global_position).length() >= trackDist:
 		PlaceTrack(_delta)
 
-	velocity = velocity.move_toward(transform.basis.z.normalized() * input_dir.y * MOVESPEED, FRICTION * 0.125) + velocity.y * Vector3.UP
+	velocity = velocity.move_toward(transform.basis.z.normalized() * input_dir.y * MOVESPEED+ velocity.y * Vector3.UP, FRICTION * 0.125) 
 	velocity += get_gravity() * _delta
 	angularVelocity = move_toward(angularVelocity, input_dir.x * TURNSPEED / TAU * _delta, FRICTION * 0.125 * 0.125)
 	rotate_y(angularVelocity)

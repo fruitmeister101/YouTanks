@@ -57,31 +57,13 @@ mesh = SubResource("CylinderMesh_4qfi5")
 [node name="Up" type="Node" parent="." unique_id=845242669]
 script = ExtResource("3_jolss")
 Mod = 8
-ModHow = 1
-ModAmount = 1.25
+ModHow = 2
+ModAmount = 0.5
 
-[node name="Up2" type="Node" parent="." unique_id=455922545]
-script = ExtResource("3_jolss")
-Mod = 5
-ModHow = 1
-ModAmount = 1.25
-
-[node name="Up3" type="Node" parent="." unique_id=792224331]
+[node name="Up2" type="Node" parent="." unique_id=792224331]
 script = ExtResource("3_jolss")
 Mod = 4
 ModHow = 2
-ModAmount = 1.0
-
-[node name="Up4" type="Node" parent="." unique_id=14188259]
-script = ExtResource("3_jolss")
-Mod = 1
-ModHow = 1
-ModAmount = 1.25
-
-[node name="Up5" type="Node" parent="." unique_id=2064889206]
-script = ExtResource("3_jolss")
-Mod = 6
-ModHow = 1
-ModAmount = 0.5
+ModAmount = 5.0
 
 [connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Destory"]

@@ -66,4 +66,10 @@ Mod = 2
 ModHow = 1
 ModAmount = 1.5
 
+[node name="Up3" type="Node" parent="." unique_id=416168025]
+script = ExtResource("3_c3mdh")
+Mod = 5
+ModHow = 1
+ModAmount = 1.25
+
 [connection signal="screen_exited" from="VisibleOnScreenNotifier3D" to="." method="Destory"]
