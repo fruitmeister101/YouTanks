@@ -40,6 +40,9 @@ properties/8/replication_mode = 2
 properties/9/path = NodePath("MainBody/Node3D/TurretRotator/Barrel:instance_shader_parameters/Color")
 properties/9/spawn = true
 properties/9/replication_mode = 2
+properties/10/path = NodePath("MainBody/Node3D/TurretRotator/Barrel/FiringPoint/ActualTarget/Target:instance_shader_parameters/Color")
+properties/10/spawn = true
+properties/10/replication_mode = 2
 
 [sub_resource type="CylinderShape3D" id="CylinderShape3D_0j3ql"]
 height = 16.0
@@ -55,7 +58,7 @@ top_radius = 0.1
 bottom_radius = 0.1
 height = 1.0
 
-[sub_resource type="ImmediateMesh" id="ImmediateMesh_aweo3"]
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_rgc5o"]
 
 [sub_resource type="ArrayMesh" id="ArrayMesh_tsiek"]
 _surfaces = [{
@@ -152,7 +155,7 @@ transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0
 visible = false
 material_override = ExtResource("6_apjm4")
 cast_shadow = 0
-mesh = SubResource("ImmediateMesh_aweo3")
+mesh = SubResource("ImmediateMesh_rgc5o")
 script = ExtResource("7_bscpi")
 points = Array[Vector3]([Vector3(0, 0, 0), Vector3(0, 0, 5)])
 end_thickness = 0.0
